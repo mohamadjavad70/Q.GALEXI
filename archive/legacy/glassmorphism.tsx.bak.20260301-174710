@@ -1,0 +1,266 @@
+/**
+ * Glassmorphism UI Components
+ * ───────────────────────────────────────
+ * Reusable glass-effect components for HUD elements
+ */
+
+import * as React from 'react';
+import { cn } from '@/lib/utils';
+
+/* ── Glass Card ── */
+export interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  blur?: 'sm' | 'md' | 'lg' | 'xl';
+  opacity?: number;
+}
+
+export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
+  ({ className, blur = 'xl', opacity = 20, children, ...props }, ref) => {
+    const blurMap = {
+      sm: 'backdrop-blur-sm',
+      md: 'backdrop-blur-md',
+      lg: 'backdrop-blur-lg',
+      xl: 'backdrop-blur-xl',
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'rounded-lg border border-border/10',
+          `bg-card/${opacity}`,
+          blurMap[blur],
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+GlassCard.displayName = 'GlassCard';
+
+/* ── Glass Panel ── */
+export interface GlassPanelProps extends React.HTMLAttributes<HTMLDivElement> {
+  frosted?: boolean;
+}
+
+export const GlassPanel = React.forwardRef<HTMLDivElement, GlassPanelProps>(
+  ({ className, frosted = false, children, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'rounded-xl border border-white/10',
+          frosted
+            ? 'bg-white/5 backdrop-blur-2xl backdrop-saturate-150'
+            : 'bg-black/20 backdrop-blur-xl',
+          'shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+GlassPanel.displayName = 'GlassPanel';
+
+/* ── Glass Button ── */
+export interface GlassButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'default' | 'primary' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export const GlassButton = React.forwardRef<HTMLButtonElement, GlassButtonProps>(
+  ({ className, variant = 'default', size = 'md', children, ...props }, ref) => {
+    const variantStyles = {
+      default: 'bg-white/10 hover:bg-white/20 text-white',
+      primary: 'bg-primary/20 hover:bg-primary/30 text-primary-foreground',
+      danger: 'bg-destructive/20 hover:bg-destructive/30 text-destructive-foreground',
+    };
+
+    const sizeStyles = {
+      sm: 'px-3 py-1.5 text-xs',
+      md: 'px-4 py-2 text-sm',
+      lg: 'px-6 py-3 text-base',
+    };
+
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          'rounded-lg border border-white/10 backdrop-blur-md',
+          'transition-all duration-200',
+          'hover:scale-105 active:scale-95',
+          'shadow-lg',
+          variantStyles[variant],
+          sizeStyles[size],
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
+);
+GlassButton.displayName = 'GlassButton';
+
+/* ── Glass Badge ── */
+export interface GlassBadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'default' | 'success' | 'warning' | 'error';
+}
+
+export const GlassBadge = React.forwardRef<HTMLDivElement, GlassBadgeProps>(
+  ({ className, variant = 'default', children, ...props }, ref) => {
+    const variantStyles = {
+      default: 'bg-white/10 text-foreground',
+      success: 'bg-green-500/20 text-green-300',
+      warning: 'bg-yellow-500/20 text-yellow-300',
+      error: 'bg-red-500/20 text-red-300',
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'inline-flex items-center px-2 py-0.5 rounded-full',
+          'text-xs font-medium',
+          'border border-white/10 backdrop-blur-md',
+          variantStyles[variant],
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+GlassBadge.displayName = 'GlassBadge';
+
+/* ── Glass Input ── */
+export interface GlassInputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+
+export const GlassInput = React.forwardRef<HTMLInputElement, GlassInputProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <input
+        ref={ref}
+        className={cn(
+          'w-full px-4 py-2 rounded-lg',
+          'bg-white/5 backdrop-blur-md',
+          'border border-white/10',
+          'text-foreground placeholder:text-muted-foreground',
+          'focus:outline-none focus:ring-2 focus:ring-primary/50',
+          'transition-all duration-200',
+          className
+        )}
+        {...props}
+      />
+    );
+  }
+);
+GlassInput.displayName = 'GlassInput';
+
+/* ── Glass Container ── */
+export interface GlassContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  glow?: boolean;
+  glowColor?: string;
+}
+
+export const GlassContainer = React.forwardRef<HTMLDivElement, GlassContainerProps>(
+  ({ className, glow = false, glowColor = 'primary', children, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'relative rounded-2xl',
+          'bg-gradient-to-br from-white/5 to-white/0',
+          'backdrop-blur-2xl backdrop-saturate-150',
+          'border border-white/10',
+          'shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]',
+          glow && `shadow-[0_0_40px_${glowColor}]`,
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+GlassContainer.displayName = 'GlassContainer';
+
+/* ── Glass Progress Bar ── */
+export interface GlassProgressProps extends React.HTMLAttributes<HTMLDivElement> {
+  value: number;
+  max?: number;
+  variant?: 'default' | 'success' | 'warning' | 'error';
+}
+
+export const GlassProgress = React.forwardRef<HTMLDivElement, GlassProgressProps>(
+  ({ className, value, max = 100, variant = 'default', ...props }, ref) => {
+    const percentage = Math.min(100, Math.max(0, (value / max) * 100));
+    
+    const variantStyles = {
+      default: 'bg-primary',
+      success: 'bg-green-500',
+      warning: 'bg-yellow-500',
+      error: 'bg-red-500',
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'relative h-2 rounded-full overflow-hidden',
+          'bg-white/5 backdrop-blur-md border border-white/10',
+          className
+        )}
+        {...props}
+      >
+        <div
+          className={cn(
+            'h-full rounded-full transition-all duration-300',
+            'backdrop-blur-sm',
+            variantStyles[variant]
+          )}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+    );
+  }
+);
+GlassProgress.displayName = 'GlassProgress';
+
+/* ── Glass Tooltip ── */
+export interface GlassTooltipProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'content'> {
+  content: React.ReactNode;
+}
+
+export const GlassTooltip = React.forwardRef<HTMLDivElement, GlassTooltipProps>(
+  ({ className, content, children, ...props }, ref) => {
+    return (
+      <div ref={ref} className={cn('relative group', className)} {...props}>
+        {children}
+        <div
+          className={cn(
+            'absolute bottom-full left-1/2 -translate-x-1/2 mb-2',
+            'px-3 py-1.5 rounded-lg',
+            'bg-black/80 backdrop-blur-md border border-white/10',
+            'text-xs text-white whitespace-nowrap',
+            'opacity-0 group-hover:opacity-100',
+            'transition-opacity duration-200',
+            'pointer-events-none'
+          )}
+        >
+          {content}
+        </div>
+      </div>
+    );
+  }
+);
+GlassTooltip.displayName = 'GlassTooltip';

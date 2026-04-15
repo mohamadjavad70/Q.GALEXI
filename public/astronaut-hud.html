@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Q • Astronaut Glass Chat HUD (Demo)</title>
+  <style>
+    html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    canvas{position:fixed;inset:0}
+
+    /* ===== Astronaut HUD Chat ===== */
+    .hud {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      width: min(980px, 94vw);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .hudShell{
+      pointer-events: auto;
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(24,90,170,.22), rgba(0,0,0,.32));
+      border: 1px solid rgba(140, 210, 255, 0.22);
+      box-shadow:
+        0 30px 90px rgba(0,0,0,.60),
+        inset 0 0 0 1px rgba(255,255,255,.06);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+    }
+
+    .hudTop {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid rgba(140, 210, 255, 0.14);
+      background: rgba(0,0,0,.18);
+    }
+
+    .brand {
+      display:flex;align-items:center;gap:10px;min-width: 0;
+    }
+
+    .statusLights{display:flex;gap:6px;align-items:center}
+    .light{width:8px;height:8px;border-radius:50%}
+    .l1{background:rgba(255,90,90,.95); box-shadow: 0 0 12px rgba(255,90,90,.45)}
+    .l2{background:rgba(255,210,90,.95); box-shadow: 0 0 12px rgba(255,210,90,.45)}
+    .l3{background:rgba(90,255,170,.95); box-shadow: 0 0 12px rgba(90,255,170,.45)}
+
+    .qMark{
+      width: 34px; height: 34px; border-radius: 999px;
+      border: 2px solid rgba(160, 230, 255, 0.65);
+      box-shadow: 0 0 22px rgba(80, 190, 255, 0.22);
+      position: relative;
+      background: rgba(0,0,0,.20);
+      flex: 0 0 auto;
+    }
+    .qMark:before{
+      content:"";
+      position:absolute; inset: 9px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.85); /* hollow center */
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+    .qMark:after{
+      content:"";
+      position:absolute;
+      width: 12px; height: 3px;
+      right: 4px; bottom: 6px;
+      background: rgba(160, 230, 255, 0.65);
+      transform: rotate(38deg);
+      border-radius: 999px;
+      opacity: .9;
+    }
+
+    .title{
+      font-weight: 700;
+      letter-spacing: .2px;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 44vw;
+    }
+    .subtitle{
+      font-size: 11px;
+      opacity: .72;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 52vw;
+    }
+
+    .hudBtns{display:flex;gap:8px;align-items:center}
+    .hudBtn{
+      border-radius: 14px;
+      padding: 8px 10px;
+      border: 1px solid rgba(140, 210, 255, 0.18);
+      background: rgba(255,255,255,.06);
+      color:#fff;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .hudBtn:hover{background: rgba(255,255,255,.10)}
+
+    .hudBody{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 12px 14px 14px;
+    }
+
+    /* compact glass chat window */
+    .chatWindow{
+      height: 180px; /* ✅ فضای کوچیک */
+      border-radius: 18px;
+      border: 1px solid rgba(140, 210, 255, 0.14);
+      background: rgba(0,0,0,.22);
+      overflow: hidden;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .msgs{
+      flex:1;
+      overflow:auto;
+      padding: 12px 10px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(140,210,255,.22) transparent;
+    }
+    .msgs::-webkit-scrollbar{height:10px;width:10px}
+    .msgs::-webkit-scrollbar-thumb{background:rgba(140,210,255,.18);border-radius:999px}
+    .msg{
+      display:flex;
+      margin: 8px 0;
+      gap: 10px;
+      align-items:flex-end;
+    }
+    .bubble{
+      max-width: 78%;
+      padding: 10px 12px;
+      border-radius: 16px;
+      line-height: 1.55;
+      font-size: 13px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.22);
+    }
+    .me{justify-content:flex-end}
+    .me .bubble{
+      background: linear-gradient(180deg, rgba(80,190,255,.16), rgba(255,255,255,.05));
+      border-color: rgba(140,210,255,.18);
+    }
+    .q .bubble{
+      background: rgba(0,0,0,.26);
+      border-color: rgba(255,255,255,.08);
+    }
+
+    .meta{
+      font-size: 10px;
+      opacity: .55;
+      margin: 0 8px 2px;
+      white-space: nowrap;
+    }
+
+    .inputBar{
+      display:flex;
+      gap: 10px;
+      padding: 10px;
+      border-top: 1px solid rgba(140, 210, 255, 0.14);
+      background: rgba(0,0,0,.16);
+      align-items:center;
+    }
+    .field{
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(140, 210, 255, 0.18);
+      background: rgba(255,255,255,.06);
+    }
+    .field input{
+      width:100%;
+      background: transparent;
+      border:none;
+      outline:none;
+      color:#fff;
+      font-size: 13px;
+    }
+    .chip{
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(140, 210, 255, 0.18);
+      background: rgba(0,0,0,.18);
+      opacity: .9;
+    }
+    .send{
+      border-radius: 16px;
+      padding: 10px 14px;
+      border: 1px solid rgba(140, 210, 255, 0.18);
+      background: rgba(255,255,255,.08);
+      color:#fff;
+      cursor:pointer;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .send:hover{background: rgba(255,255,255,.14)}
+
+    /* subtle corner markings like astronaut UI */
+    .corners:before,.corners:after{
+      content:"";
+      position:absolute;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(140, 210, 255, 0.20);
+      border-right:none;border-bottom:none;
+      border-radius: 6px 0 0 0;
+      top: 10px; left: 10px;
+    }
+    .corners:after{
+      top:auto; left:auto;
+      bottom: 10px; right: 10px;
+      border-left:none;border-top:none;
+      border-right: 2px solid rgba(140, 210, 255, 0.20);
+      border-bottom: 2px solid rgba(140, 210, 255, 0.20);
+      border-radius: 0 0 6px 0;
+    }
+
+    /* small helper */
+    .kbd{
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      color:#fff;
+      font-size: 12px;
+      opacity: .72;
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(12px);
+      z-index: 6;
+    }
+  </style>
+</head>
+<body>
+<canvas id="galaxy"></canvas>
+
+<div class="hud">
+  <div class="hudShell corners">
+    <div class="hudTop">
+      <div class="brand">
+        <div class="qMark" title="Q"></div>
+        <div style="min-width:0">
+          <div class="title">Q • Astronaut Chat HUD</div>
+          <div class="subtitle">شیشه آبی • مینیمال • آماده برای Voice / Tools</div>
+        </div>
+        <div class="statusLights" title="Status">
+          <span class="light l1"></span><span class="light l2"></span><span class="light l3"></span>
+        </div>
+      </div>
+      <div class="hudBtns">
+        <button class="hudBtn" id="btnClear">پاک‌کردن</button>
+        <button class="hudBtn" id="btnDemo">سؤال نمونه</button>
+      </div>
+    </div>
+
+    <div class="hudBody">
+      <div class="chatWindow">
+        <div class="msgs" id="msgs">
+          <div class="msg q">
+            <div class="bubble">سلام. من Q هستم. اینجا مثل کابین فضانوردهاست—شیشه‌ای، سبک، دقیق.</div>
+            <div class="meta">Q</div>
+          </div>
+          <div class="msg q">
+            <div class="bubble">یک جمله بگو تا جهان پشت سرمون واکنش نشون بده.</div>
+            <div class="meta">Q</div>
+          </div>
+        </div>
+        <div class="inputBar">
+          <span class="chip" id="mode">Mode: Universe</span>
+          <div class="field">
+            <input id="inp" placeholder="مثلاً: میشه برام موزیک بذاری؟ یا: کوانتوم چیه؟" />
+          </div>
+          <button class="send" id="send">ارسال</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="kbd">🖱️ موس = عمق • ⌨️ Enter = ارسال</div>
+
+<script>
+(() => {
+  const c = document.getElementById('galaxy');
+  const ctx = c.getContext('2d');
+
+  let w=0,h=0,dpr=1;
+  function resize(){
+    dpr = window.devicePixelRatio || 1;
+    w = innerWidth; h = innerHeight;
+    c.width = Math.floor(w*dpr);
+    c.height = Math.floor(h*dpr);
+    c.style.width = w+'px';
+    c.style.height = h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  addEventListener('resize', resize);
+  resize();
+
+  // parallax
+  let px=0,py=0;
+  addEventListener('pointermove', (e)=>{
+    const nx = (e.clientX / w) * 2 - 1;
+    const ny = (e.clientY / h) * 2 - 1;
+    px = nx; py = ny;
+  }, {passive:true});
+
+  // Chakra Orbs (fixed)
+  const chakraColors = ["#ff2a2a","#ff7a18","#ffd000","#2cff7a","#00d0ff","#6e48ff","#d46bff"];
+  function chakraOrbs() {
+    const cx = w*0.5, cy = h*0.5;
+    const R = Math.min(w,h) * 0.22;
+    const placements = [
+      {x: cx - R*1.25, y: cy - R*0.55, r: R*0.34},
+      {x: cx + R*1.15, y: cy - R*0.35, r: R*0.30},
+      {x: cx - R*0.95, y: cy + R*0.75, r: R*0.32},
+      {x: cx + R*0.85, y: cy + R*0.82, r: R*0.28},
+      {x: cx - R*0.10, y: cy - R*1.05, r: R*0.26},
+      {x: cx + R*0.10, y: cy + R*0.05, r: R*0.40}, // main
+      {x: cx + R*1.65, y: cy + R*0.10, r: R*0.22},
+    ];
+    return placements.map((p,i)=>({ ...p, color: chakraColors[i], idx:i }));
+  }
+
+  // Stars
+  const LAYERS = 4;
+  const stars = [];
+  const baseCount = Math.min(2000, Math.floor((w*h)/540));
+  const rnd = (a,b)=>a+Math.random()*(b-a);
+
+  function spawnStar(layer){
+    return { x:rnd(-w,w), y:rnd(-h,h), z:rnd(0.02,1), s:rnd(0.6,2.2), layer };
+  }
+  for(let layer=0;layer<LAYERS;layer++){
+    const count = Math.floor(baseCount * (0.55 + layer*0.25));
+    for(let i=0;i<count;i++) stars.push(spawnStar(layer));
+  }
+
+  // Golden active passing orbs
+  const golden = [];
+  function spawnGolden(){
+    const side = Math.random()<0.5 ? -1 : 1;
+    const y = rnd(0, h);
+    const baseR = rnd(26, 78);
+    return {
+      x: side<0 ? -rnd(120,320) : w + rnd(120,320),
+      y,
+      vx: side<0 ? rnd(22,68) : -rnd(22,68),
+      vy: rnd(-10,10),
+      r: baseR,
+      tw0: rnd(0, Math.PI*2),
+      tw1: rnd(0, Math.PI*2),
+      tw2: rnd(0, Math.PI*2),
+      twSpeed: rnd(0.7, 1.9),
+      phase: rnd(0, Math.PI*2),
+      swirl: rnd(0.35, 1.2),
+      sparks: Math.floor(rnd(5, 10)),
+      a: rnd(0.10, 0.18)
+    };
+  }
+  for(let i=0;i<6;i++) golden.push(spawnGolden());
+
+  // entrance warp
+  const start = performance.now();
+  const WARP_MS = 1200;
+  let tPrev = performance.now();
+
+  // simple "mode" based on text
+  let mode = "Universe";
+  const modeEl = document.getElementById('mode');
+
+  function drawChakraOrb(x,y,r,color,t,idx){
+    const breathe = 1 + 0.03*Math.sin(t/900 + idx*1.3);
+    const rr = r*breathe;
+
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+
+    const g = ctx.createRadialGradient(x,y,rr*0.2,x,y,rr*1.35);
+    g.addColorStop(0, hexA(color, 0.22));
+    g.addColorStop(0.55, hexA(color, 0.10));
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x,y,rr*1.35,0,Math.PI*2);
+    ctx.fill();
+
+    const body = ctx.createRadialGradient(x-rr*0.15,y-rr*0.2,rr*0.1,x,y,rr);
+    body.addColorStop(0, "rgba(255,255,255,0.12)");
+    body.addColorStop(0.25, hexA(color, 0.18));
+    body.addColorStop(1, "rgba(0,0,0,0.10)");
+    ctx.fillStyle = body;
+    ctx.beginPath();
+    ctx.arc(x,y,rr,0,Math.PI*2);
+    ctx.fill();
+
+    const planets = 7;
+    const ringR = rr*0.46;
+    for(let i=0;i<planets;i++){
+      const ang = (i/planets)*Math.PI*2 + (t/6000)*0.15;
+      const px = x + Math.cos(ang)*ringR;
+      const py = y + Math.sin(ang)*ringR;
+
+      const pr = rr*(0.09 + 0.03*Math.sin(t/1200 + i*2.1));
+      const pg = ctx.createRadialGradient(px-pr*0.2,py-pr*0.2,pr*0.2,px,py,pr*1.2);
+      pg.addColorStop(0, "rgba(255,255,255,0.55)");
+      pg.addColorStop(0.35, hexA(color, 0.26));
+      pg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = pg;
+      ctx.beginPath();
+      ctx.arc(px,py,pr*1.15,0,Math.PI*2);
+      ctx.fill();
+    }
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.strokeStyle = hexA(color, 0.22);
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(x,y,ringR,0,Math.PI*2);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawGoldenOrb(o, t){
+    const tt = t/1000;
+    const tw =
+      0.55
+      + 0.22*Math.sin(tt*o.twSpeed + o.tw0)
+      + 0.14*Math.sin(tt*(o.twSpeed*1.7) + o.tw1)
+      + 0.09*Math.sin(tt*(o.twSpeed*2.4) + o.tw2);
+
+    const glowA = clamp(o.a * (0.75 + tw), 0.06, 0.34);
+    const coreA = clamp(0.10 + tw*0.18, 0.08, 0.38);
+
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+
+    const g = ctx.createRadialGradient(o.x,o.y,o.r*0.15,o.x,o.y,o.r*2.0);
+    g.addColorStop(0, `rgba(255, 236, 170, ${glowA*1.15})`);
+    g.addColorStop(0.25, `rgba(255, 204, 90, ${glowA})`);
+    g.addColorStop(0.65, `rgba(255, 150, 40, ${glowA*0.55})`);
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(o.x,o.y,o.r*2.0,0,Math.PI*2);
+    ctx.fill();
+
+    const body = ctx.createRadialGradient(o.x-o.r*0.22,o.y-o.r*0.26,o.r*0.15,o.x,o.y,o.r);
+    body.addColorStop(0, `rgba(255,255,255,${0.18+coreA*0.25})`);
+    body.addColorStop(0.22, `rgba(255, 226, 150, ${0.16+coreA*0.22})`);
+    body.addColorStop(1, `rgba(10, 6, 2, ${0.12})`);
+    ctx.fillStyle = body;
+    ctx.beginPath();
+    ctx.arc(o.x,o.y,o.r,0,Math.PI*2);
+    ctx.fill();
+
+    // internal arcs
+    const swirlR = o.r * (0.62 + 0.10*Math.sin(tt*1.3 + o.phase));
+    const spins = 3;
+    for(let k=0;k<spins;k++){
+      const a0 = tt*(0.9+o.swirl) + o.phase + k*2.1;
+      const a1 = a0 + 1.3 + 0.6*Math.sin(tt*1.1 + k);
+      ctx.strokeStyle = `rgba(255, 210, 120, ${0.08 + tw*0.10})`;
+      ctx.lineWidth = 1.0 + tw*0.9;
+      ctx.beginPath();
+      ctx.arc(o.x, o.y, swirlR*(0.65 + k*0.18), a0, a1);
+      ctx.stroke();
+    }
+
+    // sparks
+    for(let i=0;i<o.sparks;i++){
+      const ang = (i/o.sparks)*Math.PI*2 + tt*(1.2+o.swirl)*0.9;
+      const rr = o.r*(0.18 + 0.55*Math.abs(Math.sin(tt*0.9 + i)));
+      const sx = o.x + Math.cos(ang)*rr;
+      const sy = o.y + Math.sin(ang)*rr*0.78;
+      const sr = Math.max(0.9, o.r*(0.02 + 0.015*Math.sin(tt*3.1 + i)));
+      ctx.fillStyle = `rgba(255, 245, 210, ${0.20 + tw*0.28})`;
+      ctx.beginPath();
+      ctx.arc(sx, sy, sr, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = `rgba(255,255,255,${0.08 + tw*0.08})`;
+    ctx.beginPath();
+    ctx.arc(o.x - o.r*0.28, o.y - o.r*0.34, o.r*0.22, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function draw(t){
+    const dt = Math.min(0.05, (t - tPrev)/1000);
+    tPrev = t;
+
+    const p = Math.min(1, (t - start)/WARP_MS);
+    const warp = 1 + (1 - p)*6.5;
+
+    // background
+    ctx.clearRect(0,0,w,h);
+    const bg = ctx.createRadialGradient(w*0.5, h*0.45, 10, w*0.5, h*0.45, Math.max(w,h));
+    bg.addColorStop(0, 'rgba(10, 12, 30, 1)');
+    bg.addColorStop(0.55, 'rgba(3, 5, 18, 1)');
+    bg.addColorStop(1, 'rgba(0, 0, 0, 1)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0,0,w,h);
+
+    const fog = ctx.createLinearGradient(0,0,0,h);
+    fog.addColorStop(0, 'rgba(90, 50, 180, 0.09)');
+    fog.addColorStop(0.5,'rgba(40, 120, 220, 0.07)');
+    fog.addColorStop(1, 'rgba(0, 0, 0, 0.18)');
+    ctx.fillStyle = fog;
+    ctx.fillRect(0,0,w,h);
+
+    const cx = w*0.5, cy = h*0.5;
+
+    // stars
+    for(const st of stars){
+      const speed = (0.22 + (1 - st.z)*1.6) * (0.65 + st.layer*0.18);
+      st.z -= dt * speed * 0.22 * warp;
+      if(st.z < 0.02){
+        st.z = 1;
+        st.x = rnd(-w,w);
+        st.y = rnd(-h,h);
+        st.s = rnd(0.6,2.2);
+      }
+
+      const k = 1/(st.z*1.6);
+      const parX = px*(30 + st.layer*18);
+      const parY = py*(22 + st.layer*14);
+
+      const x = cx + (st.x + parX)*k;
+      const y = cy + (st.y + parY)*k;
+      if(x<-50||x>w+50||y<-50||y>h+50) continue;
+
+      const a = 0.04 + (1 - st.z)*0.32;
+      const r = st.s*k;
+
+      const streak = (1 - p)*18*(1 - st.z);
+
+      ctx.globalAlpha = Math.min(1,a);
+      ctx.fillStyle = 'rgba(255,255,255,1)';
+      ctx.beginPath();
+      ctx.arc(x,y,Math.max(0.6,r),0,Math.PI*2);
+      ctx.fill();
+
+      if(streak>0.2){
+        ctx.globalAlpha = Math.min(1, a*0.55);
+        ctx.lineWidth = Math.max(1,r);
+        ctx.strokeStyle = 'rgba(255,255,255,1)';
+        ctx.beginPath();
+        ctx.moveTo(x,y);
+        ctx.lineTo(x - (x - cx) * 0.02 * streak, y - (y - cy) * 0.02 * streak);
+        ctx.stroke();
+      }
+    }
+
+    // golden orbs
+    for(const o of golden){
+      o.x += o.vx*dt;
+      o.y += o.vy*dt + Math.sin(t/1400 + o.r)*0.10;
+      const wob = 1 + 0.03*Math.sin(t/800 + o.phase);
+      const rr = o.r * wob;
+
+      const savedR = o.r;
+      o.r = rr;
+      drawGoldenOrb(o, t);
+      o.r = savedR;
+
+      if(o.x < -520 || o.x > w+520 || o.y < -380 || o.y > h+380){
+        const n = spawnGolden();
+        Object.assign(o, n);
+      }
+    }
+
+    // chakra fixed
+    const orbs = chakraOrbs();
+    for(const orb of orbs){
+      drawChakraOrb(orb.x, orb.y, orb.r, orb.color, t, orb.idx);
+    }
+
+    // vignette
+    ctx.globalAlpha = 1;
+    const v = ctx.createRadialGradient(cx,cy,Math.min(w,h)*0.2,cx,cy,Math.max(w,h)*0.75);
+    v.addColorStop(0,'rgba(0,0,0,0)');
+    v.addColorStop(1,'rgba(0,0,0,0.60)');
+    ctx.fillStyle = v;
+    ctx.fillRect(0,0,w,h);
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  function hexA(hex, a){
+    const h = hex.replace('#','');
+    const r = parseInt(h.slice(0,2),16);
+    const g = parseInt(h.slice(2,4),16);
+    const b = parseInt(h.slice(4,6),16);
+    return `rgba(${r},${g},${b},${clamp(a,0,1)})`;
+  }
+  function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+
+  // ===== Chat UI behavior =====
+  const msgs = document.getElementById('msgs');
+  const inp = document.getElementById('inp');
+  const send = document.getElementById('send');
+  const btnClear = document.getElementById('btnClear');
+  const btnDemo = document.getElementById('btnDemo');
+
+  function push(text, who='me'){
+    const wrap = document.createElement('div');
+    wrap.className = 'msg ' + (who==='me'?'me':'q');
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent = text;
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.textContent = who==='me'?'You':'Q';
+
+    if(who==='me'){
+      wrap.appendChild(meta);
+      wrap.appendChild(bubble);
+    } else {
+      wrap.appendChild(bubble);
+      wrap.appendChild(meta);
+    }
+
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function setMode(m){
+    mode = m;
+    modeEl.textContent = 'Mode: ' + m;
+  }
+
+  function reply(userText){
+    if(/(موزیک|آهنگ|music|پخش)/i.test(userText)){
+      setMode('Music');
+      push('اوکی. حالت موسیقی فعال شد. (بعداً اینجا پخش‌کننده هم می‌ذاریم)', 'q');
+      return;
+    }
+    if(/(کوانتوم|quantum|فیزیک)/i.test(userText)){
+      setMode('Quantum');
+      push('کوانتوم یعنی: واقعیت، با مشاهده تو شکل می‌گیره. حالا یک سوال دقیق‌تر بپرس.', 'q');
+      return;
+    }
+    if(/(عشق|love)/i.test(userText)){
+      setMode('Love');
+      push('حرف از عشق شد… توپ‌های طلایی گرم‌تر می‌درخشن.', 'q');
+      return;
+    }
+    setMode('Universe');
+    push('شنیدم. ادامه بده—جهان با تو آپدیت می‌شه.', 'q');
+  }
+
+  function onSend(){
+    const t = (inp.value||'').trim();
+    if(!t) return;
+    push(t, 'me');
+    inp.value = '';
+    setTimeout(()=>reply(t), 220);
+  }
+
+  send.addEventListener('click', onSend);
+  inp.addEventListener('keydown', (e)=>{ if(e.key==='Enter') onSend(); });
+
+  btnClear.addEventListener('click', ()=>{
+    msgs.innerHTML = '';
+    push('پاک شد. از نو شروع کن.', 'q');
+    setMode('Universe');
+  });
+
+  btnDemo.addEventListener('click', ()=>{
+    const samples = ['میشه برام موزیک بذاری؟', 'کوانتوم چیه؟', 'یه جمله عاشقانه بگو'];
+    const s = samples[Math.floor(Math.random()*samples.length)];
+    inp.value = s;
+    inp.focus();
+  });
+})();
+</script>
+</body>
+</html>
