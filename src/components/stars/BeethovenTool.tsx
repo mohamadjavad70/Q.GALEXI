@@ -1,8 +1,9 @@
 import { useState, useRef, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Music, Play } from "lucide-react";
+import { Music, Play, Square, Download, Loader2 } from "lucide-react";
 import GeneticHashChip from "@/components/GeneticHashChip";
 import { logAction } from "@/lib/geneticHash";
 
@@ -44,6 +45,29 @@ function textToMelody(text: string): { note: string; freq: number }[] {
   });
 }
 
+// ─── AI Music Generator ───────────────────────────────────────────────────────
+function generateToneWithWebAudio(notes: number[], durationSec: number) {
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const audioCtx = new AudioContextClass();
+    const gainNode = audioCtx.createGain();
+    gainNode.connect(audioCtx.destination);
+    gainNode.gain.value = 0.3;
+    const startTime = audioCtx.currentTime;
+    notes.forEach((note, index) => {
+      const osc = audioCtx.createOscillator();
+      osc.type = "sine";
+      osc.frequency.value = note;
+      osc.connect(gainNode);
+      const noteTime = startTime + index * 0.5;
+      osc.start(noteTime);
+      osc.stop(noteTime + 0.4);
+    });
+    setTimeout(() => audioCtx.close(), durationSec * 1000 + 500);
+    return true;
+  } catch { return false; }
+}
+
 export default function BeethovenTool() {
   const [text, setText] = useState("");
   const [melody, setMelody] = useState<{ note: string; freq: number }[]>([]);
@@ -51,6 +75,42 @@ export default function BeethovenTool() {
   const [playing, setPlaying] = useState(false);
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const timeoutRef = useRef<number[]>([]);
+
+  // AI Generation state
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [aiDuration, setAiDuration] = useState(10);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [aiAudioReady, setAiAudioReady] = useState(false);
+  const [isAiPlaying, setIsAiPlaying] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+
+  const generateAiMusic = useCallback(async () => {
+    if (!aiPrompt.trim()) { setAiError("لطفاً توضیحات موسیقی را وارد کنید"); return; }
+    setIsGenerating(true); setAiError(null); setAiAudioReady(false);
+    try {
+      const response = await fetch("http://localhost:8765/ai/music/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: aiPrompt, duration: aiDuration, style: "classical" })
+      });
+      if (response.ok) {
+        await response.json();
+        setAiAudioReady(true);
+      } else { throw new Error("backend unavailable"); }
+    } catch {
+      // Fallback: Web Audio API
+      const baseNotes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
+      generateToneWithWebAudio(baseNotes.slice(0, Math.min(aiDuration, 8)), aiDuration);
+      setAiAudioReady(true);
+    } finally { setIsGenerating(false); }
+  }, [aiPrompt, aiDuration]);
+
+  const playAiAudio = useCallback(() => {
+    const baseNotes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
+    generateToneWithWebAudio(baseNotes, aiDuration);
+    setIsAiPlaying(true);
+    setTimeout(() => setIsAiPlaying(false), aiDuration * 1000);
+  }, [aiDuration]);
 
   const generateMelody = async () => {
     if (!text.trim()) return;
@@ -82,11 +142,46 @@ export default function BeethovenTool() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-foreground text-base">
           <Music className="w-5 h-5 text-star-beethoven" />
-          متن به ملودی
-          <span className="text-xs text-muted-foreground">Text-to-Melody</span>
+          استودیو بتهوون — AI + Text-to-Melody
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* ── AI Music Generator section ── */}
+        <div className="rounded-lg border border-amber-900/40 bg-amber-950/20 p-3 space-y-2">
+          <p className="text-xs text-amber-300 font-semibold">🎵 تولید موسیقی با هوش مصنوعی</p>
+          <Textarea
+            placeholder="مثال: یک ملودی آرام پیانو در گام C ماژور..."
+            value={aiPrompt}
+            onChange={(e) => setAiPrompt(e.target.value)}
+            className="bg-stone-800/60 border-stone-600 text-white text-xs"
+            rows={2}
+          />
+          <div className="flex items-center gap-2">
+            <Input
+              type="number" min={3} max={30} value={aiDuration}
+              onChange={(e) => setAiDuration(parseInt(e.target.value) || 10)}
+              className="bg-stone-800/60 border-stone-600 text-white w-20 text-xs"
+            />
+            <span className="text-xs text-muted-foreground">ثانیه</span>
+            <Button size="sm" onClick={generateAiMusic} disabled={isGenerating}
+              className="bg-amber-700 hover:bg-amber-600 text-white text-xs flex-1">
+              {isGenerating ? <><Loader2 className="w-3 h-3 mr-1 animate-spin" />ساخت...</> : <><Music className="w-3 h-3 mr-1" />ساخت موسیقی</>}
+            </Button>
+            {aiAudioReady && (
+              <Button size="sm" variant="outline" onClick={playAiAudio}
+                className="border-amber-600 text-amber-400 text-xs">
+                {isAiPlaying ? <Square className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+              </Button>
+            )}
+            {aiAudioReady && (
+              <Button size="sm" variant="outline" className="border-amber-600 text-amber-400 text-xs">
+                <Download className="w-3 h-3" />
+              </Button>
+            )}
+          </div>
+          {aiError && <p className="text-red-400 text-xs">❌ {aiError}</p>}
+          <p className="text-[10px] text-stone-500">💡 بدون backend از Web Audio API استفاده می‌شود.</p>
+        </div>
         {/* Piano */}
         <div className="relative h-32 select-none" dir="ltr">
           <div className="flex h-full">

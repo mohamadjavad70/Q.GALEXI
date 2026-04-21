@@ -35,17 +35,17 @@ export default function Command() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="min-h-screen bg-background p-6 md:p-12"
-      dir="rtl"
+      dir="ltr"
     >
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <Button variant="ghost" onClick={() => navigate("/")} className="gap-2 text-foreground">
             <ArrowRight className="w-4 h-4" />
-            کهکشان
+            Galaxie
           </Button>
           <div className="text-center">
-            <h1 className="text-xl font-bold text-foreground">📡 اتاق فرمان</h1>
+            <h1 className="text-xl font-bold text-foreground">📡 Kommandoraum</h1>
             <p className="text-xs text-muted-foreground">Command Room — Public</p>
           </div>
           <LanguagePicker compact />
@@ -56,16 +56,16 @@ export default function Command() {
           <CardHeader className="pb-2">
             <CardTitle className="text-foreground text-sm flex items-center gap-2">
               <Globe2 className="w-4 h-4 text-primary" />
-              وضعیت کهکشان
+              Galaxie-Status
               <span className="text-[10px] text-muted-foreground">Galaxy Status</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="flex items-center gap-4">
-            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">● آنلاین</Badge>
-            <Badge variant="outline" className="text-xs">دمو</Badge>
+            <Badge className="bg-green-500/20 text-green-400 border-green-500/30">● Online</Badge>
+            <Badge variant="outline" className="text-xs">Demo</Badge>
             {lastEntry && (
               <span className="text-muted-foreground text-[10px]">
-                آخرین فعالیت: {new Date(lastEntry.timestamp).toLocaleTimeString("fa-IR")}
+                Letzte Aktivität: {new Date(lastEntry.timestamp).toLocaleTimeString("de-DE")}
               </span>
             )}
           </CardContent>
@@ -76,7 +76,7 @@ export default function Command() {
           <CardHeader className="pb-2">
             <CardTitle className="text-foreground text-sm flex items-center gap-2">
               <Radio className="w-4 h-4 text-primary" />
-              وضعیت سیارات
+              Planetenstatus
               <span className="text-[10px] text-muted-foreground">Planet Status</span>
             </CardTitle>
           </CardHeader>
@@ -91,7 +91,7 @@ export default function Command() {
                 <div className="flex items-center gap-2">
                   <span className="text-muted-foreground text-[10px]">{star.missionFa}</span>
                   <Badge variant={star.enabledTools.length > 0 ? "default" : "outline"} className="text-[8px] px-1.5">
-                    {star.enabledTools.length > 0 ? "فعال" : "به‌زودی"}
+                    {star.enabledTools.length > 0 ? "Aktiv" : "Demnächst"}
                   </Badge>
                 </div>
               </div>
@@ -104,13 +104,13 @@ export default function Command() {
           <CardHeader className="pb-2">
             <CardTitle className="text-foreground text-sm flex items-center gap-2">
               <Trophy className="w-4 h-4 text-accent" />
-              رتبه‌بندی
+              Rangliste
               <span className="text-[10px] text-muted-foreground">Rankings</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             {rankings.length === 0 ? (
-              <p className="text-muted-foreground text-xs">هنوز داده‌ای ثبت نشده</p>
+              <p className="text-muted-foreground text-xs">Noch keine Daten</p>
             ) : (
               <div className="space-y-1.5">
                 {rankings.map(([slug, count], i) => {
@@ -120,7 +120,7 @@ export default function Command() {
                       <span className="text-accent font-bold text-xs w-4">#{i + 1}</span>
                       {star && <span className="w-2 h-2 rounded-full" style={{ backgroundColor: star.chakraColor }} />}
                       <span className="text-foreground">{star?.displayNameFa || slug}</span>
-                      <span className="text-muted-foreground text-[10px] mr-auto">{count} عمل</span>
+                      <span className="text-muted-foreground text-[10px] mr-auto">{count} Aktionen</span>
                     </div>
                   );
                 })}
@@ -134,13 +134,13 @@ export default function Command() {
           <CardHeader className="pb-2">
             <CardTitle className="text-foreground text-sm flex items-center gap-2">
               <Activity className="w-4 h-4 text-primary" />
-              فعالیت اخیر
+              Letzte Aktivität
               <span className="text-[10px] text-muted-foreground">Recent Activity</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             {ledger.length === 0 ? (
-              <p className="text-muted-foreground text-xs">هنوز فعالیتی ثبت نشده</p>
+              <p className="text-muted-foreground text-xs">Noch keine Aktivität</p>
             ) : (
               <div className="space-y-1.5 max-h-60 overflow-y-auto">
                 {[...ledger].reverse().slice(0, 15).map((entry, i) => (
@@ -153,7 +153,7 @@ export default function Command() {
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <span>{entry.starSlug}</span>
-                      <span>{new Date(entry.timestamp).toLocaleTimeString("fa-IR")}</span>
+                      <span>{new Date(entry.timestamp).toLocaleTimeString("de-DE")}</span>
                     </div>
                   </div>
                 ))}

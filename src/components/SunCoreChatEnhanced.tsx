@@ -47,7 +47,7 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
     {
       id: ++idCounter,
       role: "suncore",
-      text: "سلام فرمانده! 🌸 من گل‌گلاب هستم — هسته اجرایی SunCore با قابلیت Self-Healing.\nهر دستوری بده، تحلیل می‌کنم و اجرا می‌کنم. خطاهای کنسول را نیز مانیتور می‌کنم.",
+      text: "Willkommen, Kommandant! 🌸 Ich bin GolGolab — der SunCore-Exekutivkern mit Self-Healing-Funktion.\nGeben Sie jeden Befehl, ich analysiere und führe ihn aus. Ich überwache auch Konsolenfehler.",
       timestamp: Date.now(),
     },
   ]);
@@ -86,6 +86,16 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
     }
   }, [messages, thinking]);
 
+  // Quick responses for greetings — no reasoning needed
+  const QUICK_REPLIES: { pattern: RegExp; response: string }[] = [
+    { pattern: /^(hallo|hi|hey|guten (morgen|tag|abend)|servus|moin)/i, response: "Hallo Kommandant! 🌸 Wie kann ich Ihnen heute helfen?" },
+    { pattern: /^wie geht(s| es| es dir| es ihnen)/i, response: "Mir geht es ausgezeichnet, danke! 🌸 Was haben Sie auf dem Programm?" },
+    { pattern: /^(danke|thx|thank|merci|vielen dank)/i, response: "Gern geschehen, Kommandant! 🌸 Immer für Sie da." },
+    { pattern: /^(tschüss|bye|auf wiedersehen|ciao|bis dann)/i, response: "Auf Wiedersehen! 👋 Die Galaxie wartet auf Sie." },
+    { pattern: /^(wer bist du|who are you|was bist du)/i, response: "Ich bin GolGolab 🌸 — SunCore Exekutivkern mit Self-Healing. Geben Sie mir jeden Befehl!" },
+    { pattern: /^(ok|okay|gut|prima|super|alles klar)/i, response: "Verstanden ✅ Was kommt als nächstes?" },
+  ];
+
   const send = useCallback(async () => {
     if (thinking) return;
     const parsed = ChatMessageSchema.safeParse(input);
@@ -100,6 +110,22 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
     };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
+    logAction("suncore_prompt", "golgolab");
+
+    // Check for quick greeting first
+    const quickMatch = QUICK_REPLIES.find(({ pattern }) => pattern.test(trimmed.trim()));
+    if (quickMatch) {
+      setTimeout(() => {
+        setMessages((prev) => [...prev, {
+          id: ++idCounter,
+          role: "suncore",
+          text: quickMatch.response,
+          timestamp: Date.now(),
+        }]);
+      }, 200 + Math.random() * 150);
+      return;
+    }
+
     setThinking(true);
     logAction("suncore_prompt", "golgolab");
 
@@ -111,8 +137,7 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
       followUpQuestion: string;
       strategicQuestions: string[];
     }) => {
-      const responseText = `📊 **تحلیل اجرایی:**\n${reasoning.internalQuestions.slice(0, 3).map((q) => `• ${q.question} → ${q.answer}`).join("\n")}\n\n🎯 **پاسخ نهایی:**\n${reasoning.finalAnswer}\n\n📋 **اقدامات پیشنهادی:**\n${reasoning.actionableAnswers.map((a, i) => `${i + 1}. ${a}`).join("\n")}\n\n${reasoning.relevantApps.length > 0 ? `🛠️ **ابزارهای مرتبط:** ${reasoning.relevantApps.map((a) => a.name).join(" • ")}` : ""}\n\n❓ **${reasoning.followUpQuestion}**`;
-      const botMsg: ChatMessage = {
+      const responseText = `📊 **Exekutive Analyse:**\n${reasoning.internalQuestions.slice(0, 3).map((q) => `• ${q.question} → ${q.answer}`).join("\n")}\n\n🎯 **Endantwort:**\n${reasoning.finalAnswer}\n\n📋 **Empfohlene Maßnahmen:**\n${reasoning.actionableAnswers.map((a, i) => `${i + 1}. ${a}`).join("\n")}\n\n${reasoning.relevantApps.length > 0 ? `🛠️ **Relevante Werkzeuge:** ${reasoning.relevantApps.map((a) => a.name).join(" • ")}` : ""}\n\n❓ **${reasoning.followUpQuestion}**`;      const botMsg: ChatMessage = {
         id: ++idCounter,
         role: "suncore",
         text: responseText,
@@ -123,26 +148,31 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
       setThinking(false);
     };
 
+    const runOffline = () => {
+      setTimeout(() => {
+        const reasoning = simulateExecutiveReasoning(trimmed);
+        buildResponse(reasoning);
+      }, 600 + Math.random() * 400);
+    };
+
     try {
       if (backendStatus === 'online') {
-        const response = await qmetaramApi.executeReasoningProtocol(trimmed);
-        buildResponse(response);
+        try {
+          const apiResp = await qmetaramApi.sendChatMessage(trimmed);
+          if (apiResp.error) throw new Error(apiResp.error);
+          // Wrap plain text response into ExecutiveResponse shape
+          const wrapped = simulateExecutiveReasoning(trimmed);
+          wrapped.finalAnswer = apiResp.message || wrapped.finalAnswer;
+          buildResponse(wrapped);
+        } catch {
+          runOffline();
+        }
       } else {
-        // Offline: use setTimeout, clear thinking inside the callback
-        setTimeout(() => {
-          const reasoning = simulateExecutiveReasoning(trimmed);
-          buildResponse(reasoning);
-        }, 1500 + Math.random() * 1000);
+        runOffline();
       }
     } catch (error) {
       console.error('Chat error:', error);
-      setMessages((prev) => [...prev, {
-        id: ++idCounter,
-        role: "suncore",
-        text: "⚠️ خطا در پردازش. لطفاً دوباره تلاش کنید.",
-        timestamp: Date.now(),
-      }]);
-      setThinking(false);
+      runOffline();
     }
   }, [input, thinking, backendStatus]);
 
@@ -162,16 +192,16 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
                 🌸
               </div>
               <div>
-                <span className="block">گل‌گلاب — SunCore Executive</span>
+                <span className="block">GolGolab — SunCore Exekutiv</span>
                 <span className="block text-[10px] text-muted-foreground font-normal">
-                  هسته اجرایی کهکشان • Self-Healing AI
+                  Galaxie-Exekutivkern • Self-Healing AI
                 </span>
               </div>
             </SheetTitle>
           </SheetHeader>
           <div className="flex gap-1 mt-2">
             <GlassBadge variant="default" className="text-[8px] gap-1">
-              <Brain className="w-2.5 h-2.5" /> استدلال ۷ سوالی
+              <Brain className="w-2.5 h-2.5" /> 7-Fragen-Reasoning
             </GlassBadge>
             <GlassBadge variant="default" className="text-[8px] gap-1">
               <Activity className="w-2.5 h-2.5" /> Self-Healing
@@ -218,7 +248,7 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
                             ? "bg-secondary/20"
                             : "border-primary/20"
                         }`}
-                        dir="rtl"
+                        dir="ltr"
                       >
                         {m.text.split("\n").map((line, i) => (
                           <p key={i} className={line.startsWith("**") ? "font-semibold mt-1" : ""}>
@@ -230,13 +260,13 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
 
                     {/* Reasoning expandable */}
                     {m.reasoning && (
-                      <div className="mt-1 mr-4" dir="rtl">
+                      <div className="mt-1 mr-4" dir="ltr">
                         <button
                           onClick={() => setExpandedReasoning(expandedReasoning === m.id ? null : m.id)}
                           className="text-[10px] text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors"
                         >
                           <Brain className="w-3 h-3" />
-                          مشاهده فرآیند استدلال ۷ سوالی
+                          7-Fragen-Reasoning-Prozess anzeigen
                           {expandedReasoning === m.id ? (
                             <ChevronUp className="w-3 h-3" />
                           ) : (
@@ -252,7 +282,7 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
                               className="overflow-hidden"
                             >
                               <GlassCard blur="md" opacity={10} className="mt-2 p-2 space-y-1.5 text-[10px]">
-                                <p className="text-muted-foreground font-semibold">🧠 سوالات داخلی:</p>
+                                <p className="text-muted-foreground font-semibold">🧠 Interne Fragen:</p>
                                 {m.reasoning.internalQuestions.map((q, i) => (
                                   <div key={i} className="flex gap-1">
                                     <span className="text-primary">{i + 1}.</span>
@@ -274,7 +304,7 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
                   <div className="flex justify-end">
                     <GlassCard blur="xl" opacity={20} className="border-primary/20 px-3 py-2 flex items-center gap-2 text-sm">
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
-                      <span className="text-xs" dir="rtl">در حال استدلال ۷ سوالی...</span>
+                      <span className="text-xs" dir="ltr">7-Fragen-Reasoning läuft...</span>
                     </GlassCard>
                   </div>
                 )}
@@ -293,9 +323,9 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
                       send();
                     }
                   }}
-                  placeholder="دستور اجرایی خود را بنویسید..."
+                  placeholder="Exekutivbefehl eingeben..."
                   className="flex-1 bg-input/50 text-foreground min-h-[44px] max-h-[120px] resize-none text-sm"
-                  dir="rtl"
+                  dir="ltr"
                   rows={2}
                 />
                 <Button
@@ -311,8 +341,8 @@ export default function SunCoreChatEnhanced({ open, onOpenChange }: SunCoreChatE
                   )}
                 </Button>
               </div>
-              <p className="text-[9px] text-muted-foreground/50 text-center" dir="rtl">
-                ⚡ پروتکل: ۷ سوال داخلی → ۲ سوال + ۵ پاسخ → خروجی نهایی | Backend: {backendStatus}
+              <p className="text-[9px] text-muted-foreground/50 text-center" dir="ltr">
+                ⚡ Protokoll: 7 intern → 2 Fragen + 5 Antworten → Endergebnis | Backend: {backendStatus}
               </p>
             </div>
           </TabsContent>

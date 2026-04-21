@@ -22,37 +22,37 @@ export interface ContentBlocks {
 export const defaultContentBlocks: ContentBlocks = {
   home: {
     titleEn: "QMETARAM",
-    subtitleFa: "شبکه کهکشانی هفت ستاره",
+    subtitleFa: "Galaktisches 7-Sterne-Netzwerk",
     subtitleEn: "Galactic 7-Star Network",
-    cta: "روی یک ستاره کلیک کن ✦",
+    cta: "Klicken Sie auf einen Stern ❆",
   },
   stars: {
     tesla: {
-      introFa: "به آزمایشگاه ایده‌ها خوش آمدی. اینجا هر فکری به نقشه تبدیل می‌شود.",
+      introFa: "Willkommen im Ideenlabor. Hier wird jeder Gedanke zum Entwurf.",
       introEn: "Welcome to the Lab of Ideas. Every thought becomes a blueprint.",
     },
     matrix: {
-      introFa: "واقعیت لایه‌هایی دارد. اینجا رمزگشایی می‌کنیم.",
+      introFa: "Die Realität hat Schichten. Hier entschlüsseln wir sie.",
       introEn: "Reality has layers. Here we decode them.",
     },
     molana: {
-      introFa: "باغ روح و معنا. احساست را بنویس، ما گوش می‌دهیم.",
+      introFa: "Garten der Seele. Schreiben Sie Ihre Gefühle, wir hören zu.",
       introEn: "Garden of Soul. Write your feeling, we listen.",
     },
     davinci: {
-      introFa: "استودیوی رنسانس. معما حل کن تا دروازه‌ها باز شوند.",
+      introFa: "Renaissance-Studio. Lösen Sie Rätsel, um die Tore zu öffnen.",
       introEn: "Renaissance Studio. Solve puzzles to unlock the gates.",
     },
     beethoven: {
-      introFa: "تالار سمفونی. هر کلمه‌ای می‌تواند ملودی شود.",
+      introFa: "Symphoniesaal. Jedes Wort kann eine Melodie werden.",
       introEn: "Symphony Hall. Every word can become a melody.",
     },
     nebula: {
-      introFa: "سحابی در حال شکل‌گیری است. به‌زودی...",
+      introFa: "Nebel in Entstehung. Demnächst...",
       introEn: "Nebula is forming. Coming soon...",
     },
     aurora: {
-      introFa: "شفق قطبی هنوز طلوع نکرده. به‌زودی...",
+      introFa: "Polarlicht noch nicht erschienen. Demnächst...",
       introEn: "Aurora hasn't risen yet. Coming soon...",
     },
   },

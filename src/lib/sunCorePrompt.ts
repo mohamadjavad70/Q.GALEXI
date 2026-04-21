@@ -30,9 +30,9 @@ For EVERY topic you receive:
 5. Convert to final output: 1 clear answer + 1 follow-up question to the user
 
 Output format:
-📊 تحلیل: [brief analysis]
-🎯 پاسخ نهایی: [your executive answer]
-❓ سوال بعدی: [your follow-up question to user]
+📊 Analyse: [brief analysis]
+🎯 Endantwort: [your executive answer]
+❓ Nächste Frage: [your follow-up question to user]
 `;
 
 /** App categories for the executive AI to analyze */
@@ -144,30 +144,30 @@ export function simulateExecutiveReasoning(userPrompt: string): ExecutiveRespons
   }
 
   const internalQuestions: ReasoningStep[] = [
-    { question: "هدف اصلی کاربر چیست؟", answer: `تحلیل درخواست: "${userPrompt.slice(0, 50)}..."` },
-    { question: "چه ابزارهایی مرتبط هستند؟", answer: `${relevantApps.map(a => a.name).join("، ")}` },
-    { question: "ویژگی‌های برتر هر ابزار؟", answer: relevantApps.slice(0, 3).map(a => `${a.name}: ${a.topFeatures[0]}`).join(" | ") },
-    { question: "ریسک‌های امنیتی؟", answer: "بررسی دسترسی‌ها و اعتبارسنجی ورودی" },
-    { question: "تأثیر بر تجربه کاربری؟", answer: "باید سریع و بازی‌گونه باشد" },
-    { question: "نیازمندی‌های زیرساختی؟", answer: "Edge Function + DB + RLS" },
-    { question: "اولویت اجرا؟", answer: "UI اول، سپس API، سپس تست" },
+    { question: "Was ist das Hauptziel des Benutzers?", answer: `Anforderungsanalyse: "${userPrompt.slice(0, 50)}..."` },
+    { question: "Welche Werkzeuge sind relevant?", answer: `${relevantApps.map(a => a.name).join(", ")}` },
+    { question: "Top-Funktionen jedes Werkzeugs?", answer: relevantApps.slice(0, 3).map(a => `${a.name}: ${a.topFeatures[0]}`).join(" | ") },
+    { question: "Sicherheitsrisiken?", answer: "Zugriffsrechte und Eingabevalidierung pr\u00fcfen" },
+    { question: "Auswirkung auf Benutzererfahrung?", answer: "Muss schnell und spielerisch sein" },
+    { question: "Infrastrukturanforderungen?", answer: "Edge Function + DB + RLS" },
+    { question: "Ausf\u00fchrungspriorit\u00e4t?", answer: "Zuerst UI, dann API, dann Tests" },
   ];
 
   return {
     internalQuestions,
     strategicQuestions: [
-      "آیا این قابلیت باید real-time باشد یا batch؟",
-      "سطح دسترسی مورد نیاز: عمومی یا فقط فرمانده؟",
+      "Soll diese Funktion Echtzeit oder Batch-Verarbeitung nutzen?",
+      "Zugriffsebene: Öffentlich oder nur Kommandant?",
     ],
     actionableAnswers: [
-      "پیاده‌سازی UI با optimistic update",
-      "ساخت Edge Function برای پردازش سمت سرور",
-      "اضافه کردن RLS برای امنیت داده",
-      "لاگ کردن در Genetic Ledger",
-      "تست end-to-end با سناریوهای واقعی",
+      "UI mit optimistischem Update implementieren",
+      "Edge Function für serverseitige Verarbeitung erstellen",
+      "RLS für Datensicherheit hinzufügen",
+      "Im Genetic Ledger protokollieren",
+      "End-to-End-Tests mit realen Szenarien",
     ],
-    finalAnswer: `بر اساس تحلیل ۷ سوالی، بهترین رویکرد برای "${userPrompt.slice(0, 30)}..." ترکیب ${relevantApps.slice(0, 2).map(a => a.name).join(" و ")} با معماری سه‌لایه (UI → API → DB) است. ابتدا رابط کاربری ساخته شود، سپس منطق سرور اضافه گردد.`,
-    followUpQuestion: "آیا می‌خواهید این قابلیت ابتدا به صورت دمو ساخته شود یا مستقیم با backend کامل پیاده شود؟",
+    finalAnswer: `Basierend auf 7-Fragen-Analyse: Bester Ansatz für "${userPrompt.slice(0, 30)}..." ist die Kombination von ${relevantApps.slice(0, 2).map(a => a.name).join(" und ")} mit dreischichtiger Architektur (UI → API → DB). Zuerst UI erstellen, dann Server-Logik hinzufügen.`,
+    followUpQuestion: "Soll diese Funktion zunächst als Demo oder direkt mit vollständigem Backend implementiert werden?",
     relevantApps: relevantApps.slice(0, 5),
   };
 }

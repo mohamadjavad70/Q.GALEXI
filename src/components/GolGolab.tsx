@@ -13,7 +13,7 @@ export default function GolGolab({ onClick }: GolGolabProps) {
       transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
       whileHover={{ scale: 1.2 }}
       whileTap={{ scale: 0.9 }}
-      title="گل‌گلاب — دستیار کهکشانی"
+      title="GolGolab — Galaxie-Assistent"
     >
       🌸
     </motion.button>

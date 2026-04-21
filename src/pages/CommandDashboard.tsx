@@ -19,7 +19,7 @@ export default function CommandDashboard() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="min-h-screen bg-background text-foreground"
-      dir="rtl"
+      dir="ltr"
     >
       {/* Header */}
       <div className="border-b border-border/10 px-4 py-3 flex items-center justify-between">
@@ -46,7 +46,7 @@ export default function CommandDashboard() {
                   : "text-muted-foreground/50 hover:text-foreground"
               }`}
             >
-              {tab === "dashboard" ? "📊 داشبورد" : "👑 شورا"}
+              {tab === "dashboard" ? "📊 Dashboard" : "👑 Rat"}
             </button>
           ))}
         </div>

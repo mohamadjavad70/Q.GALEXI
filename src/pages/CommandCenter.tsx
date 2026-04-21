@@ -121,12 +121,12 @@ export default function CommandCenter() {
   /* ── Auth Gate ── */
   if (!authed) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6" dir="rtl">
+      <div className="min-h-screen bg-background flex items-center justify-center p-6" dir="ltr">
         <Card className={`${G} w-80`}>
           <CardHeader>
             <CardTitle className="text-foreground text-center">
               <Shield className="w-8 h-8 mx-auto mb-2 text-primary" />
-              مرکز فرماندهی
+              Kommandozentrum
               <p className="text-xs text-muted-foreground mt-1">Command Center</p>
             </CardTitle>
           </CardHeader>
@@ -141,7 +141,7 @@ export default function CommandCenter() {
                   if (valid) { unlockOwner(); setAuthed(true); }
                 }
               }}
-              placeholder="ورود..."
+              placeholder="Eingabe..."
               className="bg-input text-foreground"
               dir="ltr"
             />
@@ -149,10 +149,10 @@ export default function CommandCenter() {
               const valid = await verifyPassphrase(pass);
               if (valid) { unlockOwner(); setAuthed(true); }
             }}>
-              ورود
+              Einloggen
             </Button>
             <p className="text-xs text-muted-foreground/40 text-center">
-              نیاز به احراز هویت سرور — Admin requires server auth
+              Server-Authentifizierung erforderlich — Admin requires server auth
             </p>
           </CardContent>
         </Card>
@@ -257,43 +257,43 @@ export default function CommandCenter() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="min-h-screen bg-background p-4 md:p-6"
-      dir="rtl"
+      dir="ltr"
     >
       <div className="max-w-5xl mx-auto space-y-4">
         {/* ── Header ── */}
         <div className="flex items-center justify-between">
           <Button variant="ghost" onClick={() => navigate("/")} className="gap-2 text-foreground">
-            <ArrowRight className="w-4 h-4" /> کهکشان
+            <ArrowRight className="w-4 h-4" /> Galaxie
           </Button>
           <div className="text-center">
             <h1 className="text-lg font-bold text-foreground flex items-center gap-2 justify-center">
               <Shield className="w-4 h-4 text-primary" />
-              مرکز فرماندهی
+              Kommandozentrum
             </h1>
             <p className="text-[10px] text-muted-foreground">Command Center — Owner Only</p>
           </div>
           <div className="flex gap-2 items-center">
             <LanguagePicker compact />
             <Button size="sm" onClick={publish} className="gap-1 text-xs">
-              <Save className="w-3 h-3" /> ذخیره
+              <Save className="w-3 h-3" /> Speichern
             </Button>
             <Button size="sm" variant="outline" onClick={rollback} className="gap-1 text-xs">
-              <RotateCcw className="w-3 h-3" /> بازگشت
+              <RotateCcw className="w-3 h-3" /> Zurücksetzen
             </Button>
           </div>
         </div>
 
-        {saved && <Badge variant="default" className="text-xs">✅ ذخیره شد</Badge>}
+        {saved && <Badge variant="default" className="text-xs">✅ Gespeichert</Badge>}
 
         {/* ── Tabs ── */}
-        <Tabs defaultValue="ops" dir="rtl">
+        <Tabs defaultValue="ops" dir="ltr">
           <TabsList className="bg-secondary/50 flex flex-wrap gap-0.5 h-auto p-1">
-            <TabsTrigger value="ops" className="text-xs gap-1"><Activity className="w-3 h-3" /> وضعیت</TabsTrigger>
-            <TabsTrigger value="stars" className="text-xs gap-1"><Radio className="w-3 h-3" /> ستاره‌ها</TabsTrigger>
-            <TabsTrigger value="integrations" className="text-xs gap-1"><Link2 className="w-3 h-3" /> اتصالات</TabsTrigger>
-            <TabsTrigger value="economy" className="text-xs gap-1"><Coins className="w-3 h-3" /> اقتصاد</TabsTrigger>
-            <TabsTrigger value="forge" className="text-xs gap-1"><Hammer className="w-3 h-3" /> ساخت</TabsTrigger>
-            <TabsTrigger value="content" className="text-xs gap-1"><FileText className="w-3 h-3" /> محتوا</TabsTrigger>
+            <TabsTrigger value="ops" className="text-xs gap-1"><Activity className="w-3 h-3" /> Status</TabsTrigger>
+            <TabsTrigger value="stars" className="text-xs gap-1"><Radio className="w-3 h-3" /> Sterne</TabsTrigger>
+            <TabsTrigger value="integrations" className="text-xs gap-1"><Link2 className="w-3 h-3" /> Verbindungen</TabsTrigger>
+            <TabsTrigger value="economy" className="text-xs gap-1"><Coins className="w-3 h-3" /> Wirtschaft</TabsTrigger>
+            <TabsTrigger value="forge" className="text-xs gap-1"><Hammer className="w-3 h-3" /> Forge</TabsTrigger>
+            <TabsTrigger value="content" className="text-xs gap-1"><FileText className="w-3 h-3" /> Inhalt</TabsTrigger>
           </TabsList>
 
           {/* ══════════ TAB 1: OPS ══════════ */}
@@ -302,15 +302,15 @@ export default function CommandCenter() {
             <Card className={G}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-foreground text-sm flex items-center gap-2">
-                  <Globe2 className="w-4 h-4 text-primary" /> وضعیت کهکشان
-                  <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[8px]">● آنلاین</Badge>
-                  <Badge variant="outline" className="text-[8px]">دمو</Badge>
+                  <Globe2 className="w-4 h-4 text-primary" /> Galaxie-Status
+                  <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[8px]">● Online</Badge>
+                  <Badge variant="outline" className="text-[8px]">Demo</Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-xs text-muted-foreground space-y-1">
-                <p>ستاره‌های فعال: {registry.filter((s) => s.enabledTools.length > 0).length} / {registry.length}</p>
-                <p>کل فعالیت‌ها: {logs.length} عمل</p>
-                <p>اتصالات فعال: {connectors.filter((c) => c.permission !== "revoked").length} / {connectors.length}</p>
+                <p>Aktive Sterne: {registry.filter((s) => s.enabledTools.length > 0).length} / {registry.length}</p>
+                <p>Gesamtaktivitäten: {logs.length} Aktionen</p>
+                <p>Aktive Verbindungen: {connectors.filter((c) => c.permission !== "revoked").length} / {connectors.length}</p>
               </CardContent>
             </Card>
 
@@ -318,12 +318,12 @@ export default function CommandCenter() {
             <Card className={G}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-foreground text-sm flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-primary" /> سیگنال‌ها — Genetic Ledger
+                  <Activity className="w-4 h-4 text-primary" /> Signale — Genetic Ledger
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {groupedLogs.length === 0 ? (
-                  <p className="text-muted-foreground text-xs">هنوز سیگنالی ثبت نشده</p>
+                  <p className="text-muted-foreground text-xs">Noch keine Signale registriert</p>
                 ) : (
                   <div className="space-y-1 max-h-60 overflow-y-auto">
                     {groupedLogs.map((g, i) => (
@@ -348,14 +348,14 @@ export default function CommandCenter() {
 
           {/* ══════════ TAB 2: STARS ══════════ */}
           <TabsContent value="stars" className="space-y-3 mt-4">
-            <p className="text-xs text-muted-foreground">رجیستری ستارگان ({registry.length} نود)</p>
+            <p className="text-xs text-muted-foreground">Sternregister ({registry.length} Knoten)</p>
             {registry.map((star, i) => (
               <Card key={star.slug} className={G}>
                 <CardContent className="p-3 grid grid-cols-2 md:grid-cols-4 gap-2">
                   <div>
-                    <label className="text-[10px] text-muted-foreground">نام فارسی</label>
+                    <label className="text-[10px] text-muted-foreground">Anzeigename</label>
                     <Input value={star.displayNameFa} onChange={(e) => updateStar(i, "displayNameFa", e.target.value)}
-                      className="bg-input/30 text-foreground text-xs h-7" dir="rtl" />
+                      className="bg-input/30 text-foreground text-xs h-7" dir="ltr" />
                   </div>
                   <div>
                     <label className="text-[10px] text-muted-foreground">Name EN</label>
@@ -363,9 +363,9 @@ export default function CommandCenter() {
                       className="bg-input/30 text-foreground text-xs h-7" dir="ltr" />
                   </div>
                   <div>
-                    <label className="text-[10px] text-muted-foreground">مأموریت</label>
+                    <label className="text-[10px] text-muted-foreground">Mission</label>
                     <Input value={star.missionFa} onChange={(e) => updateStar(i, "missionFa", e.target.value)}
-                      className="bg-input/30 text-foreground text-xs h-7" dir="rtl" />
+                      className="bg-input/30 text-foreground text-xs h-7" dir="ltr" />
                   </div>
                   <div>
                     <label className="text-[10px] text-muted-foreground">Mission EN</label>
@@ -374,7 +374,7 @@ export default function CommandCenter() {
                   </div>
                   <div className="flex items-end gap-2">
                     <div>
-                      <label className="text-[10px] text-muted-foreground">چاکرا</label>
+                      <label className="text-[10px] text-muted-foreground">Chakra-Farbe</label>
                       <div className="flex items-center gap-1">
                         <input type="color" value={star.chakraColor} onChange={(e) => updateStar(i, "chakraColor", e.target.value)}
                           className="w-6 h-6 rounded cursor-pointer" />
@@ -383,21 +383,21 @@ export default function CommandCenter() {
                     </div>
                   </div>
                   <div>
-                    <label className="text-[10px] text-muted-foreground">صدا</label>
+                    <label className="text-[10px] text-muted-foreground">Sound</label>
                     <Button size="sm" variant={star.ambientSound ? "default" : "outline"} className="w-full text-[10px] h-6"
                       onClick={() => updateStar(i, "ambientSound", !star.ambientSound)}>
-                      {star.ambientSound ? "فعال" : "غیرفعال"}
+                      {star.ambientSound ? "Aktiv" : "Inaktiv"}
                     </Button>
                   </div>
                   <div>
-                    <label className="text-[10px] text-muted-foreground">پازل</label>
+                    <label className="text-[10px] text-muted-foreground">Puzzle</label>
                     <Button size="sm" variant={star.puzzleMode ? "default" : "outline"} className="w-full text-[10px] h-6"
                       onClick={() => updateStar(i, "puzzleMode", !star.puzzleMode)}>
-                      {star.puzzleMode ? "فعال" : "غیرفعال"}
+                      {star.puzzleMode ? "Aktiv" : "Inaktiv"}
                     </Button>
                   </div>
                   <div>
-                    <label className="text-[10px] text-muted-foreground">ابزارها</label>
+                    <label className="text-[10px] text-muted-foreground">Werkzeuge</label>
                     <Input value={star.enabledTools.join(", ")}
                       onChange={(e) => updateStar(i, "enabledTools", e.target.value.split(",").map((s) => s.trim()).filter(Boolean))}
                       className="bg-input/30 text-foreground text-[10px] h-6 font-mono" dir="ltr" placeholder="tool1, tool2" />
@@ -411,7 +411,7 @@ export default function CommandCenter() {
           <TabsContent value="integrations" className="space-y-4 mt-4">
             <div className="flex items-center gap-2 p-2 bg-accent/10 rounded-lg border border-accent/20">
               <AlertTriangle className="w-4 h-4 text-accent" />
-              <p className="text-xs text-accent">حالت اتوماتیک = HITL — هر عمل نیاز به تأیید فرمانده دارد</p>
+              <p className="text-xs text-accent">Automatik = HITL — Jede Aktion benötigt Kommandanten-Bestätigung</p>
             </div>
 
             {connectorsByCategory.map(({ category, items }) => (
@@ -435,7 +435,7 @@ export default function CommandCenter() {
                           </div>
                           {conn.placeholder && (
                             <Badge variant="outline" className="text-[7px] border-border/20 text-muted-foreground/40">
-                              نیاز به سرور
+                              Server erforderlich
                             </Badge>
                           )}
                         </div>
@@ -457,15 +457,15 @@ export default function CommandCenter() {
           <TabsContent value="economy" className="space-y-4 mt-4">
             <div className="flex items-center gap-2 p-2 bg-primary/10 rounded-lg border border-primary/20">
               <Coins className="w-4 h-4 text-primary" />
-              <p className="text-xs text-primary">بازار داخلی اعتبارات — OFF-CHAIN Demo</p>
+              <p className="text-xs text-primary">Interner Kreditmarkt — OFF-CHAIN Demo</p>
             </div>
 
             {/* Revenue Widgets */}
             <div className="grid grid-cols-3 gap-2">
               {[
-                { label: "اشتراک‌ها", key: "subscriptions" as const, icon: "📊" },
+                { label: "Abonnements", key: "subscriptions" as const, icon: "📊" },
                 { label: "VIP", key: "vip" as const, icon: "👑" },
-                { label: "ابزار", key: "toolUnlocks" as const, icon: "🔓" },
+                { label: "Werkzeug", key: "toolUnlocks" as const, icon: "🔓" },
               ].map(({ label, key, icon }) => (
                 <Card key={key} className={`${G} text-center p-3`}>
                   <span className="text-lg">{icon}</span>
@@ -478,7 +478,7 @@ export default function CommandCenter() {
             {/* VIP Counter */}
             <Card className={G}>
               <CardContent className="p-3 flex items-center justify-between">
-                <span className="text-foreground text-xs">👑 VIP ماهانه (Top 1000)</span>
+                <span className="text-foreground text-xs">👑 VIP monatlich (Top 1000)</span>
                 <Input type="number" value={economy.vipCount} className="w-20 bg-input/30 text-foreground text-xs h-6 text-center"
                   onChange={(e) => { setEconomy((p) => ({ ...p, vipCount: Number(e.target.value) })); setSaved(false); }} />
               </CardContent>
@@ -487,18 +487,18 @@ export default function CommandCenter() {
             {/* Coins Table */}
             <Card className={G}>
               <CardHeader className="pb-2">
-                <CardTitle className="text-foreground text-sm">سکه‌ها — 11 Star Coins</CardTitle>
+                <CardTitle className="text-foreground text-sm">Münzen — 11 Star Coins</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
                   <table className="w-full text-[10px]">
                     <thead>
                       <tr className="text-muted-foreground border-b border-border/10">
-                        <th className="text-right p-1">تیکر</th>
-                        <th className="text-right p-1">نام</th>
-                        <th className="text-center p-1">قیمت</th>
-                        <th className="text-center p-1">عرضه</th>
-                        <th className="text-right p-1">کاربرد</th>
+                        <th className="text-right p-1">Ticker</th>
+                        <th className="text-right p-1">Name</th>
+                        <th className="text-center p-1">Preis</th>
+                        <th className="text-center p-1">Angebot</th>
+                        <th className="text-right p-1">Verwendung</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -529,27 +529,27 @@ export default function CommandCenter() {
             <Card className={G}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-foreground text-sm flex items-center gap-2">
-                  <Hammer className="w-4 h-4 text-accent" /> ساخت سیاره جدید — Planet Forge
+                  <Hammer className="w-4 h-4 text-accent" /> Neuen Planeten bauen — Planet Forge
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-[10px] text-muted-foreground">نام سیاره</label>
+                    <label className="text-[10px] text-muted-foreground">Planetenname</label>
                     <Input value={forgeName} onChange={(e) => setForgeName(e.target.value)}
-                      className="bg-input/30 text-foreground text-xs h-7" dir="rtl" placeholder="نام..." />
+                      className="bg-input/30 text-foreground text-xs h-7" dir="ltr" placeholder="Name..." />
                   </div>
                   <div>
-                    <label className="text-[10px] text-muted-foreground">حلقه</label>
+                    <label className="text-[10px] text-muted-foreground">Ring</label>
                     <div className="flex gap-1">
                       <Button size="sm" variant={forgeRing === "outer" ? "default" : "outline"} className="flex-1 text-[10px] h-7"
-                        onClick={() => setForgeRing("outer")}>بیرونی</Button>
+                        onClick={() => setForgeRing("outer")}>Außen</Button>
                       <Button size="sm" variant={forgeRing === "inner" ? "default" : "outline"} className="flex-1 text-[10px] h-7"
-                        onClick={() => setForgeRing("inner")}>درونی</Button>
+                        onClick={() => setForgeRing("inner")}>Innen</Button>
                     </div>
                   </div>
                   <div>
-                    <label className="text-[10px] text-muted-foreground">رنگ چاکرا</label>
+                    <label className="text-[10px] text-muted-foreground">Chakra-Farbe</label>
                     <div className="flex items-center gap-1">
                       <input type="color" value={forgeColor} onChange={(e) => setForgeColor(e.target.value)}
                         className="w-6 h-6 rounded cursor-pointer" />
@@ -563,12 +563,12 @@ export default function CommandCenter() {
                   </div>
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted-foreground">پرامپت ساخت</label>
+                    <label className="text-[10px] text-muted-foreground">Aufbau-Prompt</label>
                   <Textarea value={forgePrompt} onChange={(e) => setForgePrompt(e.target.value)}
-                    className="bg-input/30 text-foreground text-xs min-h-[60px]" dir="rtl" placeholder="توصیف سیاره..." />
+                    className="bg-input/30 text-foreground text-xs min-h-[60px]" dir="ltr" placeholder="Planeten beschreiben..." />
                 </div>
                 <Button onClick={addForgeSpec} className="w-full text-xs gap-1">
-                  <Hammer className="w-3 h-3" /> ساخت سیاره
+                  <Hammer className="w-3 h-3" /> Planet bauen
                 </Button>
               </CardContent>
             </Card>
@@ -577,7 +577,7 @@ export default function CommandCenter() {
             {forgeSpecs.length > 0 && (
               <Card className={G}>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-foreground text-sm">سیارات ساخته‌شده ({forgeSpecs.length})</CardTitle>
+                  <CardTitle className="text-foreground text-sm">Gebaute Planeten ({forgeSpecs.length})</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-1.5">
                   {forgeSpecs.map((spec) => (
@@ -589,7 +589,7 @@ export default function CommandCenter() {
                         <Badge variant="outline" className="text-[8px]">{spec.provider}</Badge>
                       </div>
                       <span className="text-muted-foreground text-[10px]">
-                        {new Date(spec.createdAt).toLocaleDateString("fa-IR")}
+                        {new Date(spec.createdAt).toLocaleDateString("de-DE")}
                       </span>
                     </div>
                   ))}
@@ -604,29 +604,29 @@ export default function CommandCenter() {
             <Card className={G}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-foreground text-sm flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-primary" /> صفحه اصلی — Home
+                  <FileText className="w-4 h-4 text-primary" /> Startseite — Home
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[10px] text-muted-foreground">عنوان انگلیسی</label>
+                  <label className="text-[10px] text-muted-foreground">Englischer Titel</label>
                   <Input value={content.home.titleEn} onChange={(e) => updateHomeContent("titleEn", e.target.value)}
                     className="bg-input/30 text-foreground text-xs h-7" dir="ltr" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted-foreground">زیرعنوان فارسی</label>
+                  <label className="text-[10px] text-muted-foreground">Untertitel</label>
                   <Input value={content.home.subtitleFa} onChange={(e) => updateHomeContent("subtitleFa", e.target.value)}
-                    className="bg-input/30 text-foreground text-xs h-7" dir="rtl" />
+                    className="bg-input/30 text-foreground text-xs h-7" dir="ltr" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted-foreground">زیرعنوان انگلیسی</label>
+                  <label className="text-[10px] text-muted-foreground">Untertitel EN</label>
                   <Input value={content.home.subtitleEn} onChange={(e) => updateHomeContent("subtitleEn", e.target.value)}
                     className="bg-input/30 text-foreground text-xs h-7" dir="ltr" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted-foreground">متن دعوت (CTA)</label>
+                  <label className="text-[10px] text-muted-foreground">CTA-Text</label>
                   <Input value={content.home.cta} onChange={(e) => updateHomeContent("cta", e.target.value)}
-                    className="bg-input/30 text-foreground text-xs h-7" dir="rtl" />
+                    className="bg-input/30 text-foreground text-xs h-7" dir="ltr" />
                 </div>
               </CardContent>
             </Card>
@@ -644,9 +644,9 @@ export default function CommandCenter() {
                   </CardHeader>
                   <CardContent className="space-y-2">
                     <div>
-                      <label className="text-[10px] text-muted-foreground">معرفی فارسی</label>
+                      <label className="text-[10px] text-muted-foreground">Einführung</label>
                       <Textarea value={intro.introFa} onChange={(e) => updateStarContent(slug, "introFa", e.target.value)}
-                        className="bg-input/30 text-foreground text-xs min-h-[50px]" dir="rtl" />
+                        className="bg-input/30 text-foreground text-xs min-h-[50px]" dir="ltr" />
                     </div>
                     <div>
                       <label className="text-[10px] text-muted-foreground">English Intro</label>

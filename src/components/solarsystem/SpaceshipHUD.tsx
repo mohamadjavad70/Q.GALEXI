@@ -148,7 +148,7 @@ export default function SpaceshipHUD({
 
   const signals = groupLedger(getLedger());
 
-  const modeLabel = navMode === "FREE" ? "آزاد" : navMode === "AUTOPILOT" ? "اتوپایلوت" : "فوکوس";
+  const modeLabel = navMode === "FREE" ? "Frei" : navMode === "AUTOPILOT" ? "Autopilot" : "Fokus";
   const modeLabelEn = navMode === "FREE" ? "FREE" : navMode === "AUTOPILOT" ? "AUTO" : "FOCUS";
   const expanded = mode === "EXPANDED";
 
@@ -166,7 +166,7 @@ export default function SpaceshipHUD({
   }
 
   return (
-    <div className="absolute inset-0 z-20 pointer-events-none" dir="rtl">
+    <div className="absolute inset-0 z-20 pointer-events-none" dir="ltr">
       {/* ─── Top Bar ─── */}
       <div className="flex items-center justify-between px-3 py-2 md:px-4">
         <div className={`pointer-events-auto flex items-center gap-2 ${G} px-3 py-1`}>
@@ -195,13 +195,13 @@ export default function SpaceshipHUD({
             <button
               onClick={() => navigate("/command-center")}
               className={`${G} px-2 py-1 text-[8px] text-primary hover:text-foreground transition-colors flex items-center gap-1`}
-              title="فرماندهی"
+              title="Kommando"
             >
               <Terminal className="w-2.5 h-2.5" />
-              <span className="hidden md:inline">فرماندهی</span>
+              <span className="hidden md:inline">Kommando</span>
             </button>
           ) : (
-            <span className={`${G} px-2 py-1 text-[8px] text-muted-foreground/25`} title="فقط برای فرمانده">
+            <span className={`${G} px-2 py-1 text-[8px] text-muted-foreground/25`} title="Nur für Kommandant">
               <Lock className="w-2.5 h-2.5" />
             </span>
           )}
@@ -273,14 +273,14 @@ export default function SpaceshipHUD({
               />
             </div>
             <div className="flex justify-between text-[7px] text-muted-foreground/40">
-              <span>{empire.activeModules}/{empire.totalModules} ماژول</span>
-              <span>{empire.readinessAvg}% آمادگی</span>
+              <span>{empire.activeModules}/{empire.totalModules} Module</span>
+              <span>{empire.readinessAvg}% Bereitschaft</span>
             </div>
           </div>
 
           {/* Compact telemetry */}
           <div className="flex items-center justify-between">
-            <span className="text-primary/70 text-[8px] font-bold tracking-wide">تلمتری</span>
+            <span className="text-primary/70 text-[8px] font-bold tracking-wide">Telemetrie</span>
             <span className="text-foreground/80 font-mono text-[9px]">
               {telemetry.speed.toFixed(1)} <span className="text-muted-foreground/40">v</span>
             </span>
@@ -296,7 +296,7 @@ export default function SpaceshipHUD({
             <>
               <div className="border-t border-border/10 pt-2 space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-primary/70 text-[8px] font-bold">زمان مدار</span>
+                  <span className="text-primary/70 text-[8px] font-bold">Umlaufzeit</span>
                   <Button variant="ghost" size="icon" className="h-4 w-4 text-foreground/60"
                     onClick={() => onUpdate({ paused: !settings.paused })}>
                     {settings.paused ? <Play className="w-2.5 h-2.5" /> : <Pause className="w-2.5 h-2.5" />}
@@ -325,7 +325,7 @@ export default function SpaceshipHUD({
                 />
               </div>
               <div className="border-t border-border/10 pt-1.5">
-                <span className="text-muted-foreground/40 text-[7px]">اینرسی {(settings.inertia * 100).toFixed(0)}%</span>
+                <span className="text-muted-foreground/40 text-[7px]">Trägheit {(settings.inertia * 100).toFixed(0)}%</span>
                 <Slider
                   value={[settings.inertia]}
                   onValueChange={([v]) => onUpdate({ inertia: v })}
@@ -338,9 +338,9 @@ export default function SpaceshipHUD({
 
           {/* Chip toggles */}
           <div className="flex flex-wrap gap-1">
-            <Chip active={settings.showOrbits} onClick={() => onUpdate({ showOrbits: !settings.showOrbits })}>مدارها</Chip>
-            <Chip active={settings.showLabels} onClick={() => onUpdate({ showLabels: !settings.showLabels })}>برچسب</Chip>
-            <Chip active={settings.mouseLook} onClick={() => onUpdate({ mouseLook: !settings.mouseLook })}>نگاه</Chip>
+            <Chip active={settings.showOrbits} onClick={() => onUpdate({ showOrbits: !settings.showOrbits })}>Orbits</Chip>
+            <Chip active={settings.showLabels} onClick={() => onUpdate({ showLabels: !settings.showLabels })}>Labels</Chip>
+            <Chip active={settings.mouseLook} onClick={() => onUpdate({ mouseLook: !settings.mouseLook })}>Blick</Chip>
             <Chip active={!settings.audioMuted} onClick={() => onUpdate({ audioMuted: !settings.audioMuted })}>
               {settings.audioMuted ? <VolumeX className="w-2 h-2 inline -mt-px" /> : <Volume2 className="w-2 h-2 inline -mt-px" />}
             </Chip>
@@ -355,14 +355,14 @@ export default function SpaceshipHUD({
               }`}
             >
               {navMode === "FREE" ? <Rocket className="w-2.5 h-2.5" /> : <Orbit className="w-2.5 h-2.5" />}
-              {navMode === "FREE" ? "آزاد" : "اوربیت"}
+              {navMode === "FREE" ? "Frei" : "Orbit"}
             </button>
             <button
               onClick={onBrake}
               className="flex-1 flex items-center justify-center gap-1 py-1 rounded text-[8px] bg-card/15 text-muted-foreground/60 hover:text-foreground transition-colors"
-              title="ترمز (Space)"
+              title="Bremsen (Space)"
             >
-              <Square className="w-2.5 h-2.5" /> ترمز
+              <Square className="w-2.5 h-2.5" /> Bremsen
             </button>
           </div>
         </div>
@@ -375,7 +375,7 @@ export default function SpaceshipHUD({
               <Input
                 value={navQuery}
                 onChange={(e) => setNavQuery(e.target.value)}
-                placeholder="برو به سیاره..."
+                placeholder="Planet eingeben..."
                 className="text-[9px] h-5 bg-input/20 border-border/10 text-foreground placeholder:text-muted-foreground/30"
                 dir="rtl"
                 onKeyDown={handleNavKeyDown}
@@ -388,16 +388,16 @@ export default function SpaceshipHUD({
             </div>
             {navMode === "AUTOPILOT" && (
               <button className="w-full text-[8px] py-1 rounded bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors" onClick={onCancelAutopilot}>
-                لغو اتوپایلوت (C)
+                Autopilot abbrechen (C)
               </button>
             )}
             {navMode === "FOCUS" && (
               <div className="flex gap-1">
                 <button className="flex-1 text-[8px] py-1 rounded bg-card/15 text-muted-foreground hover:text-foreground transition-colors" onClick={onReleaseFocus}>
-                  آزاد
+                  Frei
                 </button>
                 <button className="flex-1 text-[8px] py-1 rounded bg-primary/15 text-primary hover:bg-primary/25 transition-colors" onClick={onEnterWorld}>
-                  ورود ✦
+                  Betreten ❆
                 </button>
               </div>
             )}
@@ -423,7 +423,7 @@ export default function SpaceshipHUD({
               onClick={() => setSignalsOpen((v) => !v)}
             >
               <span className="text-primary/60 text-[8px] font-bold flex items-center gap-1">
-                <Radio className="w-2.5 h-2.5" /> سیگنال‌ها
+                <Radio className="w-2.5 h-2.5" /> Signale
                 {signals.length > 0 && (
                   <span className="bg-primary/10 text-primary/60 text-[7px] px-1 rounded-full">{signals.length}</span>
                 )}
@@ -433,7 +433,7 @@ export default function SpaceshipHUD({
             {signalsOpen && (
               <div className="mt-1.5 space-y-0.5">
                 {signals.length === 0 && (
-                  <p className="text-muted-foreground/30 text-[8px]">هنوز سیگنالی نیست</p>
+                  <p className="text-muted-foreground/30 text-[8px]">Noch keine Signale</p>
                 )}
                 {signals.map((s, i) => (
                   <div key={i} className="flex items-center gap-1 text-[8px] group">

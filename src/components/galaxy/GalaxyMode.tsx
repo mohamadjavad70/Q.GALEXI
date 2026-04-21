@@ -12,6 +12,7 @@ import React, {
   useState,
   useCallback,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import * as THREE from 'three';
@@ -75,6 +76,36 @@ const FRAGMENT_SHADER = `
     gl_FragColor = vec4(vColor, alpha);
   }
 `;
+
+// ─── Q Named Stars ────────────────────────────────────────────────────────────
+
+const Q_STARS = [
+  { name: 'خورشید Q', position: [0, 0, 0] as [number, number, number], color: '#ffaa00', size: 1.5, desc: 'مرکز کهکشان Q — منبع نور و انرژی' },
+  { name: 'Q1', position: [5, 2, 3] as [number, number, number], color: '#ff6666', size: 0.8, desc: 'هسته اولیه Q Network' },
+  { name: 'Q2', position: [-4, 1, 4] as [number, number, number], color: '#66ff66', size: 0.9, desc: 'هسته ثانویه — هوش مصنوعی' },
+  { name: 'GALEXI', position: [-5, -1, -3] as [number, number, number], color: '#ff66ff', size: 1.2, desc: 'مرکز کهکشانی Q.GALEXI' },
+  { name: 'AIAMIR', position: [6, 3, -2] as [number, number, number], color: '#ffaa66', size: 0.9, desc: 'هسته امنیتی Q.AIAMIR' },
+];
+
+function QNamedStars({ onSelect }: { onSelect: (info: StarInfo) => void }) {
+  return (
+    <>
+      {Q_STARS.map((s, idx) => (
+        <mesh
+          key={s.name}
+          position={s.position}
+          onPointerDown={(e) => {
+            e.stopPropagation();
+            onSelect({ index: -1 - idx, position: new THREE.Vector3(...s.position), name: s.name, status: 'STABLE' });
+          }}
+        >
+          <sphereGeometry args={[s.size, 32, 32]} />
+          <meshStandardMaterial color={s.color} emissive={s.color} emissiveIntensity={0.6} />
+        </mesh>
+      ))}
+    </>
+  );
+}
 
 // ─── Galaxy Particles ─────────────────────────────────────────────────────────
 
@@ -225,6 +256,8 @@ function GalaxyScene({ quality, onStarSelect }: SceneProps) {
         onStarSelect={onStarSelect}
       />
 
+      <QNamedStars onSelect={onStarSelect} />
+
       <Stars
         radius={140}
         depth={50}
@@ -260,6 +293,7 @@ export default function GalaxyMode({ onStarSelect, onSync }: GalaxyModeProps) {
   const [planetStatus, setPlanetStatus] = useState<'idle' | 'creating' | 'done' | 'error'>('idle');
   const [createdPlanetId, setCreatedPlanetId] = useState<string | null>(null);
   const mobile = isMobileDevice();
+  const navigate = useNavigate();
 
   const handleStarSelect = useCallback(
     (star: StarInfo) => {
@@ -362,8 +396,16 @@ export default function GalaxyMode({ onStarSelect, onSync }: GalaxyModeProps) {
           </button>
         </div>
         {planetStatus === 'done' && createdPlanetId && (
-          <div className="text-emerald-400 text-xs font-mono text-center mt-1">
-            سیاره ساخته شد — ID: {createdPlanetId.slice(0, 8)}
+          <div className="flex items-center justify-between mt-1 gap-2">
+            <div className="text-emerald-400 text-xs font-mono">
+              ✅ {createdPlanetId.slice(0, 8)}
+            </div>
+            <button
+              onClick={() => navigate(`/planet/${createdPlanetId}`)}
+              className="px-3 py-1 bg-emerald-600/40 border border-emerald-500/60 rounded-lg text-white text-xs hover:bg-emerald-500/50 transition-all"
+            >
+              🚀 ورود به سیاره
+            </button>
           </div>
         )}
         {planetStatus === 'error' && (

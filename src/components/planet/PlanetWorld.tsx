@@ -1,9 +1,11 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import { useParams, useNavigate } from 'react-router-dom';
+import * as THREE from 'three';
 import { Player } from './Player';
-import { Agent } from './Agent';
+import { Agent3D } from './Agent3D';
+import { useAgentInteraction } from '../../hooks/useAgentInteraction';
 
 function Terrain() {
   return (
@@ -37,9 +39,10 @@ function Terrain() {
 
 interface SceneProps {
   planetId: string;
+  playerRef: React.RefObject<THREE.Mesh | null>;
 }
 
-function Scene({ planetId }: SceneProps) {
+function Scene({ planetId, playerRef }: SceneProps) {
   return (
     <>
       <ambientLight intensity={0.35} />
@@ -55,11 +58,14 @@ function Scene({ planetId }: SceneProps) {
 
       <Terrain />
 
-      <Player />
+      <Player ref={playerRef} />
 
-      <Agent position={[5, 0.45, -5]} planetId={planetId} name="AGENT Q-1" />
-      <Agent position={[-6, 0.45, -4]} planetId={planetId} name="AGENT Q-2" />
-      <Agent position={[0, 0.45, -10]} planetId={planetId} name="AGENT Q-3" />
+      <Agent3D agentId={`${planetId}-0`} name="کاشف-۱" role="explorer"
+        initialPos={[5, -5]} energy={90} knowledge={3} playerRef={playerRef} />
+      <Agent3D agentId={`${planetId}-1`} name="سازنده-۱" role="creator"
+        initialPos={[-6, -4]} energy={70} knowledge={7} playerRef={playerRef} />
+      <Agent3D agentId={`${planetId}-2`} name="بازرگان-۱" role="trader"
+        initialPos={[0, -10]} energy={55} knowledge={12} playerRef={playerRef} />
     </>
   );
 }
@@ -67,8 +73,28 @@ function Scene({ planetId }: SceneProps) {
 export default function PlanetWorld() {
   const { planetId = 'demo' } = useParams<{ planetId: string }>();
   const navigate = useNavigate();
+  const { getBalance, lastReward } = useAgentInteraction();
+  const [balance, setBalance] = useState<number | null>(null);
+  const [rewardFlash, setRewardFlash] = useState<number | null>(null);
+  const playerRef = useRef<THREE.Mesh | null>(null);
 
   const shortId = planetId.length > 8 ? planetId.slice(0, 8).toUpperCase() : planetId.toUpperCase();
+
+  useEffect(() => {
+    let mounted = true;
+    const refresh = async () => { if (mounted) setBalance(await getBalance()); };
+    refresh();
+    const t = setInterval(refresh, 8000);
+    return () => { mounted = false; clearInterval(t); };
+  }, [getBalance]);
+
+  useEffect(() => {
+    if (lastReward != null) {
+      setRewardFlash(lastReward);
+      const t = setTimeout(() => setRewardFlash(null), 2500);
+      return () => clearTimeout(t);
+    }
+  }, [lastReward]);
 
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#000', position: 'relative', overflow: 'hidden' }}>
@@ -91,8 +117,21 @@ export default function PlanetWorld() {
         </div>
         <div style={{ fontSize: 11, opacity: 0.6, marginTop: 6, lineHeight: 1.6 }}>
           WASD / ↑↓←→ — حرکت<br />
-          کلیک روی Agent نارنجی — گفتگو
+          کلیک روی Agent رنگی — گفتگو + Q token
         </div>
+        {balance !== null && (
+          <div style={{ marginTop: 10, fontSize: 13, color: '#ffe066', letterSpacing: 1 }}>
+            💰 {balance} Q
+          </div>
+        )}
+        {rewardFlash != null && (
+          <div style={{
+            marginTop: 6, fontSize: 16, color: '#4ade80', fontWeight: 'bold',
+            animation: 'fadeUpQ 2.5s ease forwards',
+          }}>
+            +{rewardFlash} Q ✨
+          </div>
+        )}
       </div>
 
       {/* Back button — top right */}
@@ -144,7 +183,7 @@ export default function PlanetWorld() {
         gl={{ antialias: true }}
       >
         <Suspense fallback={null}>
-          <Scene planetId={planetId} />
+          <Scene planetId={planetId} playerRef={playerRef} />
         </Suspense>
       </Canvas>
     </div>

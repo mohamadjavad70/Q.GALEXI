@@ -8,10 +8,9 @@ import { getStarIntro } from "@/data/contentBlocks";
 import ConstellationRing from "./ConstellationRing";
 import GolGolab from "./GolGolab";
 import SunCoreChat from "./SunCoreChat";
-import { MatrixRain } from "./stars/MatrixTool";
+import MatrixTool, { MatrixRain } from "./stars/MatrixTool";
 
 const TeslaTool = lazy(() => import("./stars/TeslaTool"));
-const MatrixTool = lazy(() => import("./stars/MatrixTool"));
 const MolanaTool = lazy(() => import("./stars/MolanaTool"));
 const DavinciPuzzle = lazy(() => import("./stars/DavinciPuzzle"));
 const BeethovenTool = lazy(() => import("./stars/BeethovenTool"));
@@ -66,17 +65,17 @@ function StarVisual({ bgStyle }: { bgStyle: string }) {
     default:
       return (
         <div className="flex items-center justify-center h-full">
-          <p className="text-2xl text-muted-foreground">به‌زودی... ✨</p>
+          <p className="text-2xl text-muted-foreground">Demnächst... ✨</p>
         </div>
       );
   }
 }
 
 function StarToolPanel({ bgStyle }: { bgStyle: string }) {
-  const fallback = <div className="h-40 flex items-center justify-center text-muted-foreground">در حال بارگذاری...</div>;
+  const fallback = <div className="h-40 flex items-center justify-center text-muted-foreground">Wird geladen...</div>;
   switch (bgStyle) {
     case "tesla": return <Suspense fallback={fallback}><TeslaTool /></Suspense>;
-    case "matrix": return <Suspense fallback={fallback}><MatrixTool /></Suspense>;
+    case "matrix": return <MatrixTool />;
     case "molana": return <Suspense fallback={fallback}><MolanaTool /></Suspense>;
     case "davinci": return <Suspense fallback={fallback}><DavinciPuzzle /></Suspense>;
     case "beethoven": return <Suspense fallback={fallback}><BeethovenTool /></Suspense>;
@@ -105,7 +104,7 @@ export default function StarWorldTemplate({ star }: StarWorldTemplateProps) {
       <div className="flex items-center justify-between p-4 relative z-20">
         <Button variant="ghost" onClick={() => navigate("/")} className="text-foreground gap-2">
           <ArrowRight className="w-4 h-4" />
-          کهکشان
+          Galaxie
         </Button>
         <div className="text-center max-w-md">
           <h1 className="text-xl font-bold text-foreground" style={{ textShadow: `0 0 20px ${star.chakraColor}40` }}>

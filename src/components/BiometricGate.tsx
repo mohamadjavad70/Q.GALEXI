@@ -201,26 +201,26 @@ export default function BiometricGate({ open, onClose, onNavigate }: BiometricGa
               {phase === "idle" && (
                 <>
                   <Shield className="w-6 h-6 mx-auto text-primary mb-2" />
-                  <h2 className="text-foreground font-bold text-sm">دروازه خورشید</h2>
+                  <h2 className="text-foreground font-bold text-sm">Sonnentor</h2>
                   <p className="text-muted-foreground text-[10px]">Sun Gate — Biometric Verification</p>
                 </>
               )}
               {phase === "scanning" && (
                 <>
                   <Scan className="w-6 h-6 mx-auto text-primary animate-pulse mb-2" />
-                  <p className="text-primary text-xs">در حال اسکن...</p>
+                  <p className="text-primary text-xs">Scannen...</p>
                   <p className="text-muted-foreground text-[10px]">Scanning biometrics</p>
                 </>
               )}
               {phase === "granted" && (
                 <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-                  <p className="text-primary text-sm font-bold">✦ فرمانده شناسایی شد</p>
+                  <p className="text-primary text-sm font-bold">❆ Kommandant identifiziert</p>
                   <p className="text-muted-foreground text-[10px]">Commander identified</p>
                 </motion.div>
               )}
               {phase === "denied" && (
                 <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-                  <p className="text-destructive text-sm font-bold">دسترسی غیرمجاز</p>
+                  <p className="text-destructive text-sm font-bold">Kein Zugang</p>
                   <p className="text-muted-foreground text-[10px]">Unauthorized — System locked</p>
                 </motion.div>
               )}
@@ -244,7 +244,7 @@ export default function BiometricGate({ open, onClose, onNavigate }: BiometricGa
               <div className="space-y-2">
                 <Button size="sm" className="w-full text-xs" onClick={handleScan}>
                   <Scan className="w-3.5 h-3.5 mr-1.5" />
-                  شروع اسکن
+                  Scan starten
                 </Button>
                 <Button
                   variant="ghost"
@@ -252,7 +252,7 @@ export default function BiometricGate({ open, onClose, onNavigate }: BiometricGa
                   className="w-full text-[10px] text-muted-foreground/50"
                   onClick={() => setShowPassInput(!showPassInput)}
                 >
-                  ورود دستی
+                  Manuelle Eingabe
                 </Button>
                 {showPassInput && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} className="space-y-2">
@@ -265,9 +265,9 @@ export default function BiometricGate({ open, onClose, onNavigate }: BiometricGa
                       className="text-xs h-7 bg-input/40 border-border/20 text-foreground text-center"
                       dir="ltr"
                     />
-                    {error && <p className="text-destructive text-[10px]">رد شد</p>}
+                    {error && <p className="text-destructive text-[10px]">Abgelehnt</p>}
                     <Button size="sm" variant="outline" className="w-full text-xs" onClick={handlePassSubmit}>
-                      تأیید
+                      Bestätigen
                     </Button>
                   </motion.div>
                 )}
@@ -277,13 +277,13 @@ export default function BiometricGate({ open, onClose, onNavigate }: BiometricGa
             {phase === "granted" && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2">
                 <Button size="sm" className="w-full text-xs" onClick={handleEnterCommand}>
-                  ورود به فرماندهی ✦
+                  Kommando betreten ❆
                 </Button>
                 <Button variant="outline" size="sm" className="w-full text-xs" onClick={handleQuietRoom}>
-                  🌿 اتاق آرام (Q)
+                  🌿 Stilles Zimmer (Q)
                 </Button>
                 <Button variant="outline" size="sm" className="w-full text-xs" onClick={handleCommandRoom}>
-                  📡 اتاق فرمان
+                  📡 Kommandoraum
                 </Button>
               </motion.div>
             )}
@@ -295,13 +295,13 @@ export default function BiometricGate({ open, onClose, onNavigate }: BiometricGa
                 className="space-y-2"
               >
                 <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3">
-                  <p className="text-destructive text-xs">🔒 سیستم قفل شد</p>
+                  <p className="text-destructive text-xs">🔒 System gesperrt</p>
                   <p className="text-muted-foreground text-[10px] mt-1">
-                    فقط فرمانده مجاز به ورود است
+                    Nur der Kommandant ist berechtigt
                   </p>
                 </div>
                 <Button variant="outline" size="sm" className="w-full text-xs" onClick={handleQuietRoom}>
-                  🌿 اتاق آرام (Q)
+                  🌿 Stilles Zimmer (Q)
                 </Button>
               </motion.div>
             )}
@@ -309,12 +309,12 @@ export default function BiometricGate({ open, onClose, onNavigate }: BiometricGa
             {/* Close */}
             {phase !== "denied" && (
               <Button variant="ghost" size="sm" className="w-full text-[10px] text-muted-foreground" onClick={onClose}>
-                انصراف
+                Abbrechen
               </Button>
             )}
             {phase === "denied" && (
               <Button variant="ghost" size="sm" className="w-full text-[10px] text-muted-foreground" onClick={onClose}>
-                بازگشت
+                Zurück
               </Button>
             )}
           </motion.div>

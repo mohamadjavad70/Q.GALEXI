@@ -11,8 +11,7 @@ export interface QMetaRamConfig {
 
 // Default configuration (can be overridden via environment variables)
 const DEFAULT_CONFIG: QMetaRamConfig = {
-  baseUrl: import.meta.env.VITE_QMETARAM_API_URL || 'http://localhost:8000',
-  timeout: 30000, // 30 seconds
+  baseUrl: import.meta.env.VITE_QMETARAM_API_URL || 'http://lot:  timeout: 5000, // 5 seconds — fast fail so offline fallback kicks in
 };
 
 export interface ChatMessage {
@@ -22,12 +21,26 @@ export interface ChatMessage {
 
 export interface ChatResponse {
   message: string;
-  reasoning?: {
-    internalQuestions: Array<{ question: string; answer: string }>;
-    strategicQuestions: string[];
-    actionableAnswers: string[];
-  };
+  sessionId?: string;
+  memoryId?: string;
   error?: string;
+}
+
+export interface MemoryItem {
+  key: string;
+  value: string;
+  category?: string;
+}
+
+export interface MemoryListItem extends MemoryItem {
+  created_at?: string;
+}
+
+export interface NeuralNode {
+  node_id: string;
+  parent_ids?: string[];
+  weight?: number;
+  data?: Record<string, unknown>;
 }
 
 export interface ReasoningProtocolResponse {
@@ -64,20 +77,18 @@ class QMetaRamApiClient {
   /**
    * Send a chat message to the backend
    */
-  async sendChatMessage(message: string, history?: ChatMessage[]): Promise<ChatResponse> {
+  async sendChatMessage(message: string, userId = 'guest', sessionId?: string): Promise<ChatResponse> {
     try {
       this.abortController = new AbortController();
       const timeoutId = setTimeout(() => this.abortController?.abort(), this.config.timeout);
 
+      const body: Record<string, string> = { user_id: userId, message };
+      if (sessionId) body.session_id = sessionId;
+
       const response = await fetch(`${this.config.baseUrl}/chat`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message,
-          history: history || [],
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
         signal: this.abortController.signal,
       });
 
@@ -87,15 +98,13 @@ class QMetaRamApiClient {
         throw new Error(`API request failed: ${response.status} ${response.statusText}`);
       }
 
-      // For streaming responses
-      if (response.headers.get('content-type')?.includes('text/plain')) {
-        const text = await response.text();
-        return { message: text };
-      }
-
-      // For JSON responses
       const data = await response.json();
-      return data;
+      // API returns {response, session_id, memory_id}
+      return {
+        message: data.response ?? '',
+        sessionId: data.session_id,
+        memoryId: data.memory_id,
+      };
     } catch (error) {
       if (error instanceof Error) {
         if (error.name === 'AbortError') {
@@ -110,49 +119,70 @@ class QMetaRamApiClient {
   }
 
   /**
-   * Send a chat message with streaming response
+   * Store a memory item (short-term by default)
    */
-  async *streamChatMessage(message: string, history?: ChatMessage[]): AsyncGenerator<string, void, unknown> {
+  async sendToQMemory(key: string, value: string, category = 'general', type: 'short' | 'long' = 'short'): Promise<{ ok: boolean; error?: string }> {
     try {
-      this.abortController = new AbortController();
-      const timeoutId = setTimeout(() => this.abortController?.abort(), this.config.timeout);
-
-      const response = await fetch(`${this.config.baseUrl}/chat`, {
+      const response = await fetch(`${this.config.baseUrl}/memory/${type}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message,
-          history: history || [],
-        }),
-        signal: this.abortController.signal,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value, category } satisfies MemoryItem),
+        signal: AbortSignal.timeout(8000),
       });
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-      }
-
-      const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error('No response body');
-      }
-
-      const decoder = new TextDecoder();
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const text = decoder.decode(value, { stream: true });
-        yield text;
-      }
+      if (!response.ok) throw new Error(`Memory store failed: ${response.status}`);
+      return { ok: true };
     } catch (error) {
-      if (error instanceof Error && error.name !== 'AbortError') {
-        console.error('Stream error:', error);
-      }
-    } finally {
-      this.abortController = null;
+      return { ok: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+  }
+
+  /**
+   * Get memory items
+   */
+  async getMemory(type: 'short' | 'long' | 'analytical' = 'short'): Promise<MemoryListItem[]> {
+    try {
+      const response = await fetch(`${this.config.baseUrl}/memory/${type}`, {
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!response.ok) return [];
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Get chat history for a user
+   */
+  async getChatHistory(userId: string): Promise<Array<{ role: string; content: string; timestamp?: string }>> {
+    try {
+      const response = await fetch(
+        `${this.config.baseUrl}/chat/history?user_id=${encodeURIComponent(userId)}`,
+        { signal: AbortSignal.timeout(5000) }
+      );
+      if (!response.ok) return [];
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Create a neural node
+   */
+  async createNode(nodeId: string, data: Record<string, unknown> = {}, parentIds: string[] = []): Promise<{ ok: boolean }> {
+    try {
+      const response = await fetch(`${this.config.baseUrl}/nodes/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ node_id: nodeId, parent_ids: parentIds, data } satisfies NeuralNode),
+        signal: AbortSignal.timeout(5000),
+      });
+      return { ok: response.ok };
+    } catch {
+      return { ok: false };
     }
   }
 

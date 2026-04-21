@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "/galaxial-whispers/",
+  base: "/",
   server: {
     host: "::",
     port: 8080,
@@ -23,9 +23,9 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
-        manualChunks: {
-          tensorflow: ['@tensorflow/tfjs'],
-          three:      ['three', '@react-three/fiber', '@react-three/drei'],
+        manualChunks(id) {
+          if (id.includes('@tensorflow')) return 'tensorflow';
+          if (id.includes('three') || id.includes('@react-three')) return 'three';
         },
       },
     },

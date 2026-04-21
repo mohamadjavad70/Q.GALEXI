@@ -27,6 +27,13 @@ export default function CouncilChat() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
+  const QUICK_REPLIES: { pattern: RegExp; response: string }[] = [
+    { pattern: /^(hallo|hi|hey|guten (morgen|tag|abend)|servus|moin)/i, response: "Hallo! Der 12-köpfige Rat begrüßt Sie 👋 Was ist Ihr Befehl?" },
+    { pattern: /^wie geht(s| es| es dir| es ihnen)/i, response: "Der Rat ist bereit und wartet auf Ihre Befehle 👑" },
+    { pattern: /^(danke|thx|thank|merci|vielen dank)/i, response: "Gern geschehen! Der Rat steht Ihnen jederzeit zur Verfügung." },
+    { pattern: /^(ok|okay|gut|prima|super|alles klar)/i, response: "Verstanden ✅ Warten auf den nächsten Befehl." },
+  ];
+
   const handleSend = async () => {
     const text = input.trim();
     if (!text || loading) return;
@@ -34,8 +41,21 @@ export default function CouncilChat() {
 
     const userMsg: ChatMessage = { role: "user", content: text, timestamp: Date.now() };
     setMessages(prev => [...prev, userMsg]);
-    setLoading(true);
 
+    // Quick greeting check
+    const quickMatch = QUICK_REPLIES.find(({ pattern }) => pattern.test(text));
+    if (quickMatch) {
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          role: "council",
+          content: quickMatch.response,
+          timestamp: Date.now(),
+        }]);
+      }, 150);
+      return;
+    }
+
+    setLoading(true);
     try {
       const result = await processCouncilCommand(text);
       const councilMsg: ChatMessage = {
@@ -48,7 +68,7 @@ export default function CouncilChat() {
     } catch {
       setMessages(prev => [...prev, {
         role: "council",
-        content: "⚠️ خطا در پردازش. لطفاً دوباره تلاش کنید.",
+        content: "⚠️ Fehler beim Verarbeiten. Bitte erneut versuchen.",
         timestamp: Date.now(),
       }]);
     } finally {
@@ -62,7 +82,7 @@ export default function CouncilChat() {
       <div className="px-4 py-3 border-b border-border/10 flex items-center gap-2">
         <span className="text-lg">👑</span>
         <div>
-          <h3 className="text-sm font-bold text-foreground">شورای ۱۲ نفره</h3>
+          <h3 className="text-sm font-bold text-foreground">12-köpfiger Rat</h3>
           <p className="text-[9px] text-muted-foreground">Q-Mother-Core Consensus</p>
         </div>
         <div className="mr-auto flex gap-0.5">
@@ -77,8 +97,8 @@ export default function CouncilChat() {
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3 min-h-0">
         {messages.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-muted-foreground/40 text-sm">دستور خود را بنویسید...</p>
-            <p className="text-muted-foreground/20 text-[10px] mt-1">شورای ۱۲ نفره تحلیل خواهد کرد</p>
+            <p className="text-muted-foreground/40 text-sm">Befehl eingeben...</p>
+            <p className="text-muted-foreground/20 text-[10px] mt-1">Der 12-köpfige Rat wird analysieren</p>
           </div>
         )}
 
@@ -114,7 +134,7 @@ export default function CouncilChat() {
                     onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
                     className="flex items-center gap-1 text-[9px] text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    📊 نظرات شورا ({msg.consensus.votes.length})
+                    📊 Ratsmeinungen ({msg.consensus.votes.length})
                     {expandedIdx === i ? <ChevronUp className="w-2.5 h-2.5" /> : <ChevronDown className="w-2.5 h-2.5" />}
                   </button>
                   {expandedIdx === i && (
@@ -145,7 +165,7 @@ export default function CouncilChat() {
           <div className="flex justify-start">
             <div className="bg-card/50 border border-border/10 rounded-xl px-3 py-2 flex items-center gap-2">
               <Loader2 className="w-3 h-3 animate-spin text-primary" />
-              <span className="text-[10px] text-muted-foreground">شورا در حال بررسی...</span>
+              <span className="text-[10px] text-muted-foreground">Rat prüft...</span>
             </div>
           </div>
         )}
@@ -157,9 +177,9 @@ export default function CouncilChat() {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === "Enter" && handleSend()}
-          placeholder="دستور خود را بنویسید..."
+          placeholder="Befehl eingeben..."
           className="flex-1 bg-card/20 text-foreground text-sm px-3 py-2 rounded-lg border border-border/10 placeholder:text-muted-foreground/30 focus:outline-none focus:border-primary/30"
-          dir="rtl"
+          dir="ltr"
           disabled={loading}
         />
         <button

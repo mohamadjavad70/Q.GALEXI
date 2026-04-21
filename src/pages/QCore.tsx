@@ -34,11 +34,11 @@ export default function QCore() {
         <div className="flex items-center justify-between">
           <Button variant="ghost" onClick={() => navigate("/")} className="gap-2 text-foreground">
             <ArrowRight className="w-4 h-4" />
-            کهکشان
+            Galaxie
           </Button>
           <div className="text-center">
             <h1 className="text-2xl font-bold text-foreground">Q Core</h1>
-            <p className="text-xs text-muted-foreground">اتاق آرام — Quiet Room</p>
+            <p className="text-xs text-muted-foreground">Stilles Zimmer — Quiet Room</p>
           </div>
           <div className="w-20" />
         </div>
@@ -50,11 +50,11 @@ export default function QCore() {
               <Input
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                placeholder="سوالت رو بنویس..."
+                placeholder="Ihre Frage eingeben..."
                 className="bg-input text-foreground"
-                dir="rtl"
+                dir="ltr"
               />
-              <Button onClick={() => setChatOpen(true)}>گفتگو</Button>
+              <Button onClick={() => setChatOpen(true)}>Gespräch</Button>
             </div>
           </CardContent>
         </Card>
@@ -63,15 +63,15 @@ export default function QCore() {
         <div className="grid grid-cols-3 gap-3">
           <Button variant="outline" className="h-20 flex-col gap-2 text-foreground">
             <Hammer className="w-6 h-6 text-primary" />
-            ساخت
+            Erstellen
           </Button>
           <Button variant="outline" className="h-20 flex-col gap-2 text-foreground">
             <BarChart3 className="w-6 h-6 text-primary" />
-            تحلیل
+            Analysieren
           </Button>
           <Button variant="outline" className="h-20 flex-col gap-2 text-foreground">
             <FolderKanban className="w-6 h-6 text-primary" />
-            سازماندهی
+            Organisieren
           </Button>
         </div>
 
@@ -80,7 +80,7 @@ export default function QCore() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-foreground text-base">
               <Shield className="w-5 h-5 text-primary" />
-              مجوزها و اتصالات
+              Berechtigungen & Verbindungen
               <span className="text-xs text-muted-foreground">Permissions</span>
             </CardTitle>
           </CardHeader>
@@ -91,29 +91,29 @@ export default function QCore() {
                   <span className="text-xl">{integ.icon}</span>
                   <span className="text-foreground font-medium">{integ.name}</span>
                   <Badge variant={connected[integ.name] ? "default" : "outline"} className="text-xs">
-                    {connected[integ.name] ? "متصل" : "قطع"}
+                    {connected[integ.name] ? "Verbunden" : "Getrennt"}
                   </Badge>
                 </div>
                 <div className="flex gap-2">
                   {connected[integ.name] ? (
                     <Button size="sm" variant="destructive" onClick={() => setConnected((p) => ({ ...p, [integ.name]: false }))}>
-                      قطع اتصال
+                      Trennen
                     </Button>
                   ) : (
                     <Button size="sm" variant="outline" onClick={() => setConfirmModal(integ.name)}>
-                      <Link2 className="w-3 h-3 ml-1" /> اتصال
+                      <Link2 className="w-3 h-3 ml-1" /> Verbinden
                     </Button>
                   )}
                 </div>
               </div>
             ))}
 
-            <p className="text-xs text-muted-foreground">🔒 حداقل دسترسی — فقط خواندن</p>
+            <p className="text-xs text-muted-foreground">🔒 Minimale Berechtigung — Nur Lesen</p>
 
             {/* Bank access block */}
             <div className="flex items-center gap-2 p-3 bg-destructive/10 rounded-lg border border-destructive/20">
               <AlertTriangle className="w-4 h-4 text-destructive" />
-              <p className="text-sm text-destructive">دسترسی بانکی پشتیبانی نمی‌شود. در آینده از ادغام‌های مالی فقط-خواندنی استفاده کنید.</p>
+              <p className="text-sm text-destructive">Bankzugang wird nicht unterstützt. Verwenden Sie in Zukunft nur-lese Finanzintegrationen.</p>
             </div>
           </CardContent>
         </Card>
@@ -123,13 +123,13 @@ export default function QCore() {
           <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center" onClick={() => setConfirmModal(null)}>
             <Card className="w-80" onClick={(e) => e.stopPropagation()}>
               <CardContent className="p-6 text-center space-y-4">
-                <p className="text-foreground font-bold">تأیید اتصال به {confirmModal}</p>
-                <p className="text-sm text-muted-foreground">فقط دسترسی خواندن داده می‌شود.</p>
+                <p className="text-foreground font-bold">Verbindung zu {confirmModal} bestätigen</p>
+                <p className="text-sm text-muted-foreground">Es wird nur Lesezugang gewährt.</p>
                 <div className="flex gap-3 justify-center">
                   <Button onClick={() => { setConnected((p) => ({ ...p, [confirmModal]: true })); setConfirmModal(null); }}>
-                    تأیید
+                    Bestätigen
                   </Button>
-                  <Button variant="outline" onClick={() => setConfirmModal(null)}>انصراف</Button>
+                  <Button variant="outline" onClick={() => setConfirmModal(null)}>Abbrechen</Button>
                 </div>
               </CardContent>
             </Card>

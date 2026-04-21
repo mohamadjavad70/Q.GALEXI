@@ -12,9 +12,9 @@ import { Badge } from "@/components/ui/badge";
  */
 
 const rules = [
-  { fa: "پندار نیک", en: "Good Thoughts" },
-  { fa: "گفتار نیک", en: "Good Words" },
-  { fa: "کردار نیک", en: "Good Deeds" },
+  { fa: "Gutes Denken", en: "Good Thoughts" },
+  { fa: "Gute Worte", en: "Good Words" },
+  { fa: "Gute Taten", en: "Good Deeds" },
 ];
 
 // Lightweight safety rubric (client-side only)
@@ -37,10 +37,10 @@ export default function QGateModal({ open, purpose, onClose, onPass }: QGateModa
 
   const handleSubmit = () => {
     setError("");
-    if (!allChecked) { setError("لطفاً همه قوانین را بپذیرید"); return; }
-    if (!intentValid) { setError("هدف خود را بنویسید (حداقل ۳ حرف)"); return; }
+    if (!allChecked) { setError("Bitte alle Regeln akzeptieren"); return; }
+    if (!intentValid) { setError("Ziel eingeben (mindestens 3 Zeichen)"); return; }
     if (blockedPatterns.test(intent)) {
-      setError("محتوای نامناسب شناسایی شد. لطفاً با نیت سازنده بازنویسی کنید.");
+      setError("Unangemessener Inhalt erkannt. Bitte mit konstruktiver Absicht umformulieren.");
       return;
     }
     onPass();
@@ -69,9 +69,9 @@ export default function QGateModal({ open, purpose, onClose, onPass }: QGateModa
             onClick={(e) => e.stopPropagation()}
           >
             <Card className="w-full max-w-md bg-card border-border">
-              <CardContent className="p-6 space-y-5" dir="rtl">
+              <CardContent className="p-6 space-y-5" dir="ltr">
                 <div className="text-center">
-                  <h2 className="text-xl font-bold text-foreground">دروازه Q</h2>
+                  <h2 className="text-xl font-bold text-foreground">Q-Tor</h2>
                   <p className="text-xs text-muted-foreground mt-1">Q Gate</p>
                   <Badge variant="outline" className="mt-2 text-muted-foreground text-[10px]">
                     Demo gate (client-side)
@@ -80,8 +80,8 @@ export default function QGateModal({ open, purpose, onClose, onPass }: QGateModa
 
                 <p className="text-sm text-muted-foreground text-center">
                   {purpose === "q-core"
-                    ? "برای ورود به اتاق آرام، قوانین کهکشانی را بپذیرید."
-                    : "برای ساخت سیاره جدید، قوانین کهکشانی را بپذیرید."}
+                    ? "Um das stille Zimmer zu betreten, akzeptieren Sie die galaktischen Regeln."
+                    : "Um einen neuen Planeten zu erstellen, akzeptieren Sie die galaktischen Regeln."}
                 </p>
 
                 {/* Rules */}
@@ -98,14 +98,14 @@ export default function QGateModal({ open, purpose, onClose, onPass }: QGateModa
                 {/* Intent */}
                 <div>
                   <label className="text-sm text-foreground font-medium block mb-1">
-                    هدف من از {purpose === "q-core" ? "ورود" : "ساخت"} چیست؟
+                    Was ist mein Ziel beim {purpose === "q-core" ? "Betreten" : "Erstellen"}?
                   </label>
                   <Textarea
                     value={intent}
                     onChange={(e) => setIntent(e.target.value)}
-                    placeholder="هدف خود را به اختصار بنویسید..."
+                    placeholder="Ihr Ziel kurz eingeben..."
                     className="bg-input text-foreground resize-none h-20"
-                    dir="rtl"
+                    dir="ltr"
                     maxLength={200}
                   />
                 </div>
@@ -116,9 +116,9 @@ export default function QGateModal({ open, purpose, onClose, onPass }: QGateModa
 
                 <div className="flex gap-3 justify-center">
                   <Button onClick={handleSubmit} disabled={!allChecked || !intentValid}>
-                    عبور
+                    Passieren
                   </Button>
-                  <Button variant="outline" onClick={onClose}>انصراف</Button>
+                  <Button variant="outline" onClick={onClose}>Abbrechen</Button>
                 </div>
               </CardContent>
             </Card>

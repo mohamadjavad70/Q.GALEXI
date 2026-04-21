@@ -27,18 +27,18 @@ export interface ConsensusResult {
 }
 
 export const COUNCIL_MEMBERS: CouncilMember[] = [
-  { id: "architect",    name: "Architect",     nameFa: "معمار",       role: "System Design",      icon: "🏗️" },
-  { id: "sentinel",     name: "Sentinel",      nameFa: "نگهبان",      role: "Security",           icon: "🛡️" },
-  { id: "visionary",    name: "Visionary",     nameFa: "آینده‌نگر",    role: "Strategy",           icon: "🔮" },
-  { id: "analyst",      name: "Analyst",       nameFa: "تحلیلگر",     role: "Data Analysis",      icon: "📊" },
-  { id: "defender",     name: "Defender",      nameFa: "مدافع",       role: "Risk Management",    icon: "⚔️" },
-  { id: "localist",     name: "Localist",      nameFa: "بومی‌ساز",    role: "Localization",       icon: "🌍" },
-  { id: "cryptographer",name: "Cryptographer", nameFa: "رمزنگار",     role: "Encryption",         icon: "🔐" },
-  { id: "automator",    name: "Automator",     nameFa: "اتوماتور",    role: "Automation",         icon: "⚙️" },
-  { id: "orchestrator", name: "Orchestrator",  nameFa: "هماهنگ‌کننده", role: "Integration",        icon: "🎯" },
-  { id: "critic",       name: "Critic",        nameFa: "ناقد",        role: "Quality Assurance",  icon: "🧪" },
-  { id: "guardian",     name: "Guardian",      nameFa: "محافظ",       role: "Ethics & Safety",    icon: "👁️" },
-  { id: "sovereign",    name: "Sovereign",     nameFa: "حاکم",        role: "Final Authority",    icon: "👑" },
+  { id: "architect",    name: "Architect",     nameFa: "Architekt",       role: "System Design",      icon: "🏗️" },
+  { id: "sentinel",     name: "Sentinel",      nameFa: "Wächter",       role: "Security",           icon: "🛡️" },
+  { id: "visionary",    name: "Visionary",     nameFa: "Visionär",       role: "Strategy",           icon: "🔮" },
+  { id: "analyst",      name: "Analyst",       nameFa: "Analyst",         role: "Data Analysis",      icon: "📊" },
+  { id: "defender",     name: "Defender",      nameFa: "Verteidiger",     role: "Risk Management",    icon: "⚔️" },
+  { id: "localist",     name: "Localist",      nameFa: "Lokalisierer",    role: "Localization",       icon: "🌍" },
+  { id: "cryptographer",name: "Cryptographer", nameFa: "Kryptograph",     role: "Encryption",         icon: "🔐" },
+  { id: "automator",    name: "Automator",     nameFa: "Automatisierer",  role: "Automation",         icon: "⚙️" },
+  { id: "orchestrator", name: "Orchestrator",  nameFa: "Koordinator",     role: "Integration",        icon: "🎯" },
+  { id: "critic",       name: "Critic",        nameFa: "Kritiker",        role: "Quality Assurance",  icon: "🧪" },
+  { id: "guardian",     name: "Guardian",      nameFa: "Hüter",          role: "Ethics & Safety",    icon: "👁️" },
+  { id: "sovereign",    name: "Sovereign",     nameFa: "Herrscher",       role: "Final Authority",    icon: "👑" },
 ];
 
 /**
@@ -47,7 +47,7 @@ export const COUNCIL_MEMBERS: CouncilMember[] = [
  */
 export async function processCouncilCommand(input: string): Promise<ConsensusResult> {
   // Simulate deliberation delay
-  await new Promise(r => setTimeout(r, 600 + Math.random() * 800));
+  await new Promise(r => setTimeout(r, 300 + Math.random() * 400));
 
   const keywords = input.toLowerCase();
   
@@ -58,31 +58,31 @@ export async function processCouncilCommand(input: string): Promise<ConsensusRes
     switch (member.id) {
       case "sentinel":
         contribution = keywords.includes("امنیت") || keywords.includes("security")
-          ? "لایه‌های امنیتی بررسی شد. پروتکل Zero-Trust فعال."
-          : "اسکن امنیتی انجام شد. تهدیدی شناسایی نشد.";
+          ? "Sicherheitsschichten geprüft. Zero-Trust-Protokoll aktiv."
+          : "Sicherheitsscan abgeschlossen. Keine Bedrohung erkannt.";
         break;
       case "architect":
-        contribution = "ساختار سیستم با درخواست سازگار است. معماری تایید شد.";
+        contribution = "Systemarchitektur kompatibel. Architektur bestätigt.";
         break;
       case "visionary":
-        contribution = "این حرکت با چشم‌انداز بلندمدت امپراتوری هم‌راستاست.";
+        contribution = "Diese Bewegung ist mit der Langzeitstrategie des Imperiums ausgerichtet.";
         break;
       case "analyst":
-        contribution = `تحلیل داده‌ها نشان می‌دهد این عملیات ${Math.floor(70 + Math.random() * 25)}% احتمال موفقیت دارد.`;
+        contribution = `Datenanalyse zeigt ${Math.floor(70 + Math.random() * 25)}% Erfolgswahrscheinlichkeit.`;
         break;
       case "critic":
         if (keywords.includes("خطر") || keywords.includes("risk")) {
           status = "CONCERN";
-          contribution = "هشدار: ریسک‌های احتمالی شناسایی شد. بررسی بیشتر لازم است.";
+          contribution = "Warnung: Mögliche Risiken identifiziert. Weitere Prüfung erforderlich.";
         } else {
-          contribution = "کیفیت مورد تایید است. استانداردها رعایت شده.";
+          contribution = "Qualität bestätigt. Standards eingehalten.";
         }
         break;
       case "sovereign":
-        contribution = "با اجماع شورا، دستور اجرا صادر می‌شود.";
+        contribution = "Mit Ratskonsens wird der Befehl ausgeführt.";
         break;
       default:
-        contribution = `تحلیل ${member.nameFa} در حوزه ${member.role} اعمال شد.`;
+        contribution = `Analyse von ${member.nameFa} im Bereich ${member.role} angewendet.`;
     }
 
     return { member, status, contribution };
@@ -91,7 +91,7 @@ export async function processCouncilCommand(input: string): Promise<ConsensusRes
   const concerns = votes.filter(v => v.status === "CONCERN").length;
   const confidence = Math.max(60, 100 - concerns * 15);
 
-  const finalResponse = `فرمانده، شورای ۱۲ نفره با ${concerns === 0 ? "اجماع کامل" : `${12 - concerns} رأی موافق`} دستور «${input.slice(0, 50)}${input.length > 50 ? "..." : ""}» را بررسی کرد.\n\nنتیجه: عملیات در هسته مرکزی تحلیل شد. ${concerns > 0 ? "⚠️ نگرانی‌هایی وجود دارد." : "✅ تمام بخش‌ها سبز هستند."}\n\nامنیت: ${confidence}% | پایداری: ${concerns === 0 ? "سبز" : "زرد"} | رمز چرخشی: فعال`;
+  const finalResponse = `Kommandant, der 12-köpfige Rat hat den Befehl «${input.slice(0, 50)}${input.length > 50 ? "..." : ""}» mit ${concerns === 0 ? "vollständigem Konsens" : `${12 - concerns} Ja-Stimmen`} geprüft.\n\nErgebnis: Vorgang im Zentralkern analysiert. ${concerns > 0 ? "⚠️ Es gibt Bedenken." : "✅ Alle Bereiche grün."}\n\nSicherheit: ${confidence}% | Stabilität: ${concerns === 0 ? "Grün" : "Gelb"} | Rotierungsschlüssel: Aktiv`;
 
   return {
     votes,

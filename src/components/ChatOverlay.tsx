@@ -17,18 +17,18 @@ const EVENT_PREFIX = "golgolab_evt_";
 let msgIdCounter = 0;
 
 const milestoneMessages: Record<string, string> = {
-  first_galaxy_entry: "به کهکشان خوش اومدی! ✨ هر سیاره یه دنیای جدیده.",
-  first_planet_focus: "آفرین! روی سیاره کلیک کردی. می‌تونی واردش بشی 🪐",
-  first_autopilot: "اتوپایلوت فعال شد! بشین و لذت ببر 🚀",
-  enter_qcore: "وارد هسته‌ی کیو شدی. اینجا آرامشه 🌿",
+  first_galaxy_entry: "Willkommen in der Galaxie! ✨ Jeder Planet ist eine neue Welt.",
+  first_planet_focus: "Gut gemacht! Sie haben auf einen Planeten geklickt. Sie können ihn betreten 🪐",
+  first_autopilot: "Autopilot aktiviert! Lehnen Sie sich zurück und genießen Sie 🚀",
+  enter_qcore: "Sie sind im Q-Kern. Hier herrscht Ruhe 🌿",
 };
 
 const replies: string[] = [
-  "جالبه! بیشتر بگو.",
-  "فهمیدم 🌸",
-  "خوبه، ادامه بده.",
-  "دارم فکر می‌کنم...",
-  "چه سوال قشنگی!",
+  "Interessant! Mehr davon.",
+  "Verstanden 🌸",
+  "Gut, weiter so.",
+  "Ich denke nach...",
+  "Was für eine schöne Frage!",
 ];
 
 function hasFlag(key: string): boolean {
@@ -45,7 +45,7 @@ function mkMsg(role: "user" | "golab", text: string): Message {
 function getInitialMessages(): Message[] {
   if (!hasFlag(GREETING_KEY)) {
     setFlag(GREETING_KEY);
-    return [mkMsg("golab", "سلام! من گل‌گلاب هستم 🌸 خوشحالم که اینجایی!")];
+    return [mkMsg("golab", "Hallo! Ich bin GolGolab 🌸 Schön, dass Sie hier sind!")];
   }
   return [];
 }
@@ -100,11 +100,11 @@ export default function ChatOverlay({ open, onOpenChange, starSlug }: ChatOverla
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="w-80 flex flex-col bg-card border-border">
         <SheetHeader>
-          <SheetTitle className="text-foreground">🌸 گل‌گلاب</SheetTitle>
+          <SheetTitle className="text-foreground">🌸 GolGolab</SheetTitle>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto space-y-3 py-4">
           {messages.length === 0 && (
-            <p className="text-xs text-muted-foreground text-center mt-8">پیامی نیست. سوالت رو بنویس!</p>
+            <p className="text-xs text-muted-foreground/30 text-center pt-4">Keine Nachrichten. Ihre Frage eingeben!</p>
           )}
           {messages.map((m) => (
             <div key={m.id} className={`flex ${m.role === "user" ? "justify-start" : "justify-end"}`}>
@@ -127,9 +127,9 @@ export default function ChatOverlay({ open, onOpenChange, starSlug }: ChatOverla
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && send()}
-            placeholder="پیامت رو بنویس..."
+            placeholder="Nachricht eingeben..."
             className="flex-1 bg-input text-foreground"
-            dir="rtl"
+            dir="ltr"
           />
           <Button size="icon" onClick={send} variant="default">
             <Send className="w-4 h-4" />

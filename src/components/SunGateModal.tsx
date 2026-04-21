@@ -68,27 +68,27 @@ export default function SunGateModal({ open, onClose, onNavigate }: SunGateModal
             onClick={(e) => e.stopPropagation()}
           >
             <Shield className="w-8 h-8 mx-auto text-primary" />
-            <h2 className="text-foreground font-bold text-base">Q Core — فرماندهی خصوصی</h2>
+            <h2 className="text-foreground font-bold text-base">Q Core — Privater Kommandozugang</h2>
             <p className="text-muted-foreground text-xs">Private Command Gateway</p>
 
             {/* Public options */}
             <div className="space-y-2">
               <Button variant="outline" size="sm" className="w-full text-xs" onClick={handleQuietRoom}>
-                🌿 اتاق آرام (Q)
+                🌿 Stilles Zimmer (Q)
               </Button>
               <Button variant="outline" size="sm" className="w-full text-xs" onClick={handleCommandRoom}>
-                📡 اتاق فرمان (عمومی)
+                📡 Kommandoraum (Öffentlich)
               </Button>
             </div>
 
             {/* Owner section — no hints */}
             <div className="border-t border-border/20 pt-3 space-y-2">
               <p className="text-muted-foreground/50 text-[10px] flex items-center justify-center gap-1">
-                <Lock className="w-3 h-3" /> دسترسی فرمانده
+                <Lock className="w-3 h-3" /> Kommandanten-Zugang
               </p>
               {ownerUnlocked ? (
                 <Button size="sm" className="w-full text-xs" onClick={handleEnterCommand}>
-                  ورود به فرماندهی ✦
+                  Kommando betreten ❆
                 </Button>
               ) : (
                 <>
@@ -102,17 +102,17 @@ export default function SunGateModal({ open, onClose, onNavigate }: SunGateModal
                     dir="ltr"
                   />
                   {error && (
-                    <p className="text-destructive text-[10px]">دسترسی رد شد</p>
+                    <p className="text-destructive text-[10px]">Zugang verweigert</p>
                   )}
                   <Button size="sm" className="w-full text-xs" onClick={handleEnterCommand}>
-                    ورود به فرماندهی
+                    Kommando betreten
                   </Button>
                 </>
               )}
             </div>
 
             <Button variant="ghost" size="sm" className="w-full text-xs text-muted-foreground" onClick={onClose}>
-              انصراف
+              Abbrechen
             </Button>
           </motion.div>
         </motion.div>

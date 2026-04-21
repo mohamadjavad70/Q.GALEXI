@@ -42,7 +42,7 @@ export default function SunCore() {
     {
       id: ++idCounter,
       role: "suncore",
-      text: "سلام فرمانده! 🌸\nمن گل‌گلاب هستم — هسته اجرایی SunCore.\n\nهر دستوری بده. پروتکل ۷ سوالی فعال است.\nاز دکمه‌های سریع پایین هم می‌تونی استفاده کنی.",
+      text: "Willkommen, Kommandant! 🌸\nIch bin GolGolab — der SunCore-Exekutivkern.\n\nGeben Sie jeden Befehl. 7-Fragen-Protokoll ist aktiv.\nSie können auch die Schnelltasten unten verwenden.",
       timestamp: Date.now(),
     },
   ]);
@@ -91,7 +91,7 @@ export default function SunCore() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="h-screen flex flex-col bg-background overflow-hidden"
-      dir="rtl"
+      dir="ltr"
     >
       {/* ── Top bar ── */}
       <header className="flex items-center justify-between px-4 py-2 border-b border-border/20 bg-card/60 backdrop-blur-xl shrink-0">
@@ -105,7 +105,7 @@ export default function SunCore() {
             </div>
             <div>
               <h1 className="text-sm font-bold text-foreground leading-tight">SunCore Executive</h1>
-              <p className="text-[10px] text-muted-foreground">هسته اجرایی کهکشان • فرمانده</p>
+              <p className="text-[10px] text-muted-foreground">Galaxie-Exekutivkern • Kommandant</p>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@ export default function SunCore() {
           <Badge variant="outline" className="text-[8px] gap-1 border-accent/30 text-accent">
             <Zap className="w-2.5 h-2.5" /> Executive
           </Badge>
-          <div className="w-2 h-2 rounded-full bg-primary animate-pulse ml-1" title="آنلاین" />
+          <div className="w-2 h-2 rounded-full bg-primary animate-pulse ml-1" title="Online" />
         </div>
       </header>
 
@@ -145,7 +145,7 @@ export default function SunCore() {
                   <div className="bg-primary/5 border border-primary/20 rounded-2xl px-4 py-3 flex items-center gap-3">
                     <Loader2 className="w-4 h-4 animate-spin text-primary" />
                     <div className="space-y-1">
-                      <span className="text-xs text-foreground block">در حال استدلال ۷ سوالی...</span>
+                      <span className="text-xs text-foreground block">7-Fragen-Reasoning läuft...</span>
                       <div className="flex gap-1">
                         {[...Array(7)].map((_, i) => (
                           <motion.div
@@ -196,9 +196,9 @@ export default function SunCore() {
                       send();
                     }
                   }}
-                  placeholder="دستور اجرایی خود را وارد کنید..."
+                  placeholder="Exekutivbefehl eingeben..."
                   className="pr-9 bg-input/60 text-foreground min-h-[48px] max-h-[140px] resize-none text-sm rounded-xl border-border/30 focus:border-primary/50"
-                  dir="rtl"
+                  dir="ltr"
                   rows={2}
                 />
               </div>
@@ -212,7 +212,7 @@ export default function SunCore() {
               </Button>
             </div>
             <p className="text-[9px] text-muted-foreground/40 text-center mt-1.5 max-w-3xl mx-auto">
-              ⚡ ۷ سوال داخلی → تحلیل ابزار → ۲ سوال استراتژیک + ۵ پاسخ → خروجی نهایی
+              ⚡ 7 interne Fragen → Werkzeuganalyse → 2 strategische + 5 Antworten → Endergebnis
             </p>
           </div>
         </div>
@@ -228,7 +228,7 @@ export default function SunCore() {
           <ScrollArea className="flex-1">
             <div className="p-2 space-y-1">
               {ledger.length === 0 ? (
-                <p className="text-[10px] text-muted-foreground p-2">هنوز فعالیتی ثبت نشده</p>
+                <p className="text-[10px] text-muted-foreground p-2">Noch keine Aktivität</p>
               ) : (
                 [...ledger]
                   .reverse()
@@ -244,7 +244,7 @@ export default function SunCore() {
                       </div>
                       <div className="flex items-center justify-between text-muted-foreground">
                         <span>{entry.starSlug}</span>
-                        <span>{new Date(entry.timestamp).toLocaleTimeString("fa-IR")}</span>
+                        <span>{new Date(entry.timestamp).toLocaleTimeString("de-DE")}</span>
                       </div>
                     </div>
                   ))
@@ -254,7 +254,7 @@ export default function SunCore() {
           <div className="p-2 border-t border-border/15">
             <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground">
               <Shield className="w-3 h-3" />
-              <span>{ledger.length} عمل ثبت‌شده</span>
+              <span>{ledger.length} Aktionen registriert</span>
             </div>
           </div>
         </aside>

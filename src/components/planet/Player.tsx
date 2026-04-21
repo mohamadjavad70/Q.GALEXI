@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { forwardRef, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { usePlayerMovement } from './usePlayerMovement';
@@ -6,7 +6,7 @@ import { usePlayerMovement } from './usePlayerMovement';
 const CAMERA_OFFSET = new THREE.Vector3(0, 7, 12);
 const CAMERA_LERP = 0.08;
 
-export function Player() {
+export const Player = forwardRef<THREE.Mesh, Record<string, never>>(function Player(_, externalRef) {
   const meshRef = usePlayerMovement();
   const { camera } = useThree();
   const lookTarget = useRef(new THREE.Vector3());
@@ -14,6 +14,10 @@ export function Player() {
   useFrame(() => {
     if (!meshRef.current) return;
     const pos = meshRef.current.position;
+    // Sync external ref برای proximity detection در Agent3D
+    if (externalRef && typeof externalRef !== 'function' && externalRef.current !== meshRef.current) {
+      (externalRef as React.MutableRefObject<THREE.Mesh | null>).current = meshRef.current;
+    }
     // Smooth camera follow
     const targetCamPos = pos.clone().add(CAMERA_OFFSET);
     camera.position.lerp(targetCamPos, CAMERA_LERP);
@@ -31,4 +35,5 @@ export function Player() {
       </mesh>
     </group>
   );
-}
+});
+
