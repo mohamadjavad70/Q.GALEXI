@@ -1,0 +1,129 @@
+﻿@qmetaram/whispers@0.0.0 C:\Users\KUNIGO\Downloads\Q.GALEXI
+Ôö£ÔöÇÔöÇ @eslint/js@9.39.4
+Ôö£ÔöÇÔöÇ @hookform/resolvers@3.10.0
+Ôö£ÔöÇÔöÇ @radix-ui/react-accordion@1.2.12
+Ôö£ÔöÇÔöÇ @radix-ui/react-alert-dialog@1.1.15
+Ôö£ÔöÇÔöÇ @radix-ui/react-aspect-ratio@1.1.8
+Ôö£ÔöÇÔöÇ @radix-ui/react-avatar@1.1.11
+Ôö£ÔöÇÔöÇ @radix-ui/react-checkbox@1.3.3
+Ôö£ÔöÇÔöÇ @radix-ui/react-collapsible@1.1.12
+Ôö£ÔöÇÔöÇ @radix-ui/react-context-menu@2.2.16
+Ôö£ÔöÇÔöÇ @radix-ui/react-dialog@1.1.15
+Ôö£ÔöÇÔöÇ @radix-ui/react-dropdown-menu@2.1.16
+Ôö£ÔöÇÔöÇ @radix-ui/react-hover-card@1.1.15
+Ôö£ÔöÇÔöÇ @radix-ui/react-label@2.1.8
+Ôö£ÔöÇÔöÇ @radix-ui/react-menubar@1.1.16
+Ôö£ÔöÇÔöÇ @radix-ui/react-navigation-menu@1.2.14
+Ôö£ÔöÇÔöÇ @radix-ui/react-popover@1.1.15
+Ôö£ÔöÇÔöÇ @radix-ui/react-progress@1.1.8
+Ôö£ÔöÇÔöÇ @radix-ui/react-radio-group@1.3.8
+Ôö£ÔöÇÔöÇ @radix-ui/react-scroll-area@1.2.10
+Ôö£ÔöÇÔöÇ @radix-ui/react-select@2.2.6
+Ôö£ÔöÇÔöÇ @radix-ui/react-separator@1.1.8
+Ôö£ÔöÇÔöÇ @radix-ui/react-slider@1.3.6
+Ôö£ÔöÇÔöÇ @radix-ui/react-slot@1.2.4
+Ôö£ÔöÇÔöÇ @radix-ui/react-switch@1.2.6
+Ôö£ÔöÇÔöÇ @radix-ui/react-tabs@1.1.13
+Ôö£ÔöÇÔöÇ @radix-ui/react-toast@1.2.15
+Ôö£ÔöÇÔöÇ @radix-ui/react-toggle-group@1.1.11
+Ôö£ÔöÇÔöÇ @radix-ui/react-toggle@1.1.10
+Ôö£ÔöÇÔöÇ @radix-ui/react-tooltip@1.2.8
+Ôö£ÔöÇÔöÇ @react-three/drei@9.122.0
+Ôö£ÔöÇÔöÇ @react-three/fiber@8.18.0
+Ôö£ÔöÇÔöÇ @rollup/rollup-win32-x64-msvc@4.60.1
+Ôö£ÔöÇÔöÇ @solana/accounts@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/addresses@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/assertions@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/codecs-core@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/codecs-data-structures@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/codecs-numbers@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/codecs-strings@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/codecs@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/errors@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/fast-stable-stringify@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/functional@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/instruction-plans@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/instructions@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/keys@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/nominal-types@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/offchain-messages@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/options@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/plugin-core@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/programs@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/promises@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc-api@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc-parsed-types@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc-spec-types@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc-spec@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc-subscriptions-api@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc-subscriptions-channel-websocket@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc-subscriptions-spec@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc-subscriptions@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc-transformers@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc-transport-http@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc-types@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/rpc@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/signers@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/subscribable@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/sysvars@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/transaction-confirmation@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/transaction-messages@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @solana/transactions@5.5.1 extraneous
+Ôö£ÔöÇÔöÇ @tailwindcss/typography@0.5.19
+Ôö£ÔöÇÔöÇ @tanstack/react-query@5.99.0
+Ôö£ÔöÇÔöÇ @tensorflow/tfjs@4.22.0
+Ôö£ÔöÇÔöÇ @testing-library/jest-dom@6.9.1
+Ôö£ÔöÇÔöÇ @testing-library/react@16.3.2
+Ôö£ÔöÇÔöÇ @types/node@22.19.17
+Ôö£ÔöÇÔöÇ @types/react-dom@18.3.7
+Ôö£ÔöÇÔöÇ @types/react@18.3.28
+Ôö£ÔöÇÔöÇ @types/three@0.183.1
+Ôö£ÔöÇÔöÇ @vitejs/plugin-react-swc@3.11.0
+Ôö£ÔöÇÔöÇ @web3modal/wagmi@5.1.11
+Ôö£ÔöÇÔöÇ autoprefixer@10.5.0
+Ôö£ÔöÇÔöÇ class-variance-authority@0.7.1
+Ôö£ÔöÇÔöÇ clsx@2.1.1
+Ôö£ÔöÇÔöÇ cmdk@1.1.1
+Ôö£ÔöÇÔöÇ cors@2.8.6
+Ôö£ÔöÇÔöÇ date-fns@3.6.0
+Ôö£ÔöÇÔöÇ embla-carousel-react@8.6.0
+Ôö£ÔöÇÔöÇ eslint-plugin-react-hooks@5.2.0
+Ôö£ÔöÇÔöÇ eslint-plugin-react-refresh@0.4.26
+Ôö£ÔöÇÔöÇ eslint@9.39.4
+Ôö£ÔöÇÔöÇ express@5.2.1
+Ôö£ÔöÇÔöÇ follow-redirects@1.16.0 extraneous
+Ôö£ÔöÇÔöÇ framer-motion@12.38.0
+Ôö£ÔöÇÔöÇ gh-pages@6.3.0
+Ôö£ÔöÇÔöÇ globals@15.15.0
+Ôö£ÔöÇÔöÇ input-otp@1.4.2
+Ôö£ÔöÇÔöÇ jsdom@29.0.2
+Ôö£ÔöÇÔöÇ lovable-tagger@1.1.13
+Ôö£ÔöÇÔöÇ lucide-react@0.462.0
+Ôö£ÔöÇÔöÇ next-themes@0.3.0
+Ôö£ÔöÇÔöÇ playwright@1.59.1
+Ôö£ÔöÇÔöÇ postcss@8.5.10
+Ôö£ÔöÇÔöÇ proxy-from-env@1.1.0 extraneous
+Ôö£ÔöÇÔöÇ react-day-picker@8.10.1
+Ôö£ÔöÇÔöÇ react-dom@18.3.1
+Ôö£ÔöÇÔöÇ react-hook-form@7.72.1
+Ôö£ÔöÇÔöÇ react-resizable-panels@2.1.9
+Ôö£ÔöÇÔöÇ react-router-dom@6.30.3
+Ôö£ÔöÇÔöÇ react@18.3.1
+Ôö£ÔöÇÔöÇ recharts@2.15.4
+Ôö£ÔöÇÔöÇ socket.io-client@4.8.3
+Ôö£ÔöÇÔöÇ socket.io@4.8.3
+Ôö£ÔöÇÔöÇ sonner@1.7.4
+Ôö£ÔöÇÔöÇ tailwind-merge@2.6.1
+Ôö£ÔöÇÔöÇ tailwindcss-animate@1.0.7
+Ôö£ÔöÇÔöÇ tailwindcss@3.4.19
+Ôö£ÔöÇÔöÇ three@0.160.1
+Ôö£ÔöÇÔöÇ typescript-eslint@8.58.2
+Ôö£ÔöÇÔöÇ typescript@5.9.3
+Ôö£ÔöÇÔöÇ uuid@13.0.0
+Ôö£ÔöÇÔöÇ vaul@0.9.9
+Ôö£ÔöÇÔöÇ viem@2.47.18
+Ôö£ÔöÇÔöÇ vite@7.3.2
+Ôö£ÔöÇÔöÇ vitest@3.2.4
+Ôö£ÔöÇÔöÇ wagmi@3.6.1
+ÔööÔöÇÔöÇ zod@3.25.76
+

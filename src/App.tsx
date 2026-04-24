@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { AgentProvider } from "./context/AgentContext";
 import Index from "./pages/Index";
 import StarWorld from "./pages/StarWorld";
 import QCore from "./pages/QCore";
@@ -14,6 +15,7 @@ import Command from "./pages/Command";
 import SunCorePage from "./pages/SunCore";
 import CommandDashboard from "./pages/CommandDashboard";
 import SovereignHub from "./pages/SovereignHub";
+import ExecutiveAssistantPage from "./pages/ExecutiveAssistant";
 import NotFound from "./pages/NotFound";
 
 const GalaxyMode = lazy(() => import("./components/galaxy/GalaxyMode"));
@@ -27,11 +29,14 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
+        <Route path="/chat" element={<Index initialTab="chat" />} />
+        <Route path="/CHAT" element={<Index initialTab="chat" />} />
         <Route path="/star/:slug" element={<StarWorld />} />
         <Route path="/q" element={<QCore />} />
         <Route path="/command-center" element={<CommandCenter />} />
         <Route path="/command" element={<Command />} />
         <Route path="/sun-core" element={<SunCorePage />} />
+        <Route path="/assistant" element={<ExecutiveAssistantPage />} />
         <Route path="/empire" element={<CommandDashboard />} />
         <Route path="/q-sovereign" element={<SovereignHub />} />
         <Route
@@ -99,11 +104,13 @@ const App = () => {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AnimatedRoutes />
-          </BrowserRouter>
+          <AgentProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <AnimatedRoutes />
+            </BrowserRouter>
+          </AgentProvider>
         </TooltipProvider>
       </QueryClientProvider>
     </ErrorBoundary>

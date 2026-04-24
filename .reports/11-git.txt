@@ -1,0 +1,17 @@
+﻿## main...origin/main
+AM .reports/01-structure.txt
+A  .reports/09-deps.txt
+M  src/App.tsx
+M  src/lib/qmetaramApi.ts
+M  src/pages/Index.tsx
+?? .reports/10-node-npm-build.txt
+?? .reports/10-versions.txt
+?? .reports/11-git-branch.txt
+?? .reports/11-git-log.txt
+?? .reports/11-git-status.txt
+?? .reports/11-git.txt
+-----
+* main
+-----
+be5fab4 feat: Complete Q.GALEXI implementation - Agent Market, World Replay, Collective Memory, Multi-Agent Coordination
+6a4a084 feat: Galaxy Mode + Sovereign Hub + CI/CD

@@ -18,6 +18,7 @@ const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3001";
 type Tab = "stars" | "market" | "chat" | "referral" | "integration" | "galaxy";
 
 interface VoteData { bluePercent: number; redPercent: number; total: number; }
+interface IndexProps { initialTab?: Tab; }
 
 function Starfield() {
   const stars = Array.from({ length: 60 }, (_, i) => ({
@@ -35,10 +36,10 @@ function Starfield() {
   );
 }
 
-export default function Index() {
+export default function Index({ initialTab = "stars" }: IndexProps) {
   const navigate = useNavigate();
   const [lang, setLangState] = useState<Lang>(getLang);
-  const [tab, setTab] = useState<Tab>("stars");
+  const [tab, setTab] = useState<Tab>(initialTab);
   const [councilOpen, setCouncilOpen] = useState(false);
   const [sunOpen, setSunOpen] = useState(false);
   const [votes, setVotes] = useState<VoteData>({ bluePercent: 59, redPercent: 41, total: 211 });

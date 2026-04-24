@@ -1,0 +1,8 @@
+﻿## main...origin/main
+A  .reports/01-structure.txt
+A  .reports/09-deps.txt
+M  src/App.tsx
+M  src/lib/qmetaramApi.ts
+M  src/pages/Index.tsx
+?? .reports/10-versions.txt
+?? .reports/11-git-status.txt

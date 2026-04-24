@@ -9,7 +9,7 @@ import { Mic, MicOff, Send, Brain, Loader2, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { qmetaramApi } from "@/lib/qmetaramApi";
+import { qmetaramApiService } from "@/services/QmetaramApiService";
 import { simulateExecutiveReasoning } from "@/lib/sunCorePrompt";
 
 interface Message {
@@ -79,7 +79,7 @@ export default function QVoiceChat({ className = "" }: QVoiceChatProps) {
   const sendToQMemory = useCallback(async (userText: string, botText: string) => {
     const key = `voice_${Date.now()}`;
     const value = `Benutzer: ${userText}\nQ: ${botText}`;
-    const result = await qmetaramApi.sendToQMemory(key, value, "voice_chat", "short");
+    const result = await qmetaramApiService.sendToQMemory(key, value, "voice_chat", "short");
     if (result.ok) setMemCount((c) => c + 1);
     return result.ok;
   }, []);
@@ -110,7 +110,7 @@ export default function QVoiceChat({ className = "" }: QVoiceChatProps) {
 
     setThinking(true);
     try {
-      const resp = await qmetaramApi.sendChatMessage(text, USER_ID, sessionId);
+      const resp = await qmetaramApiService.sendChatMessage(text, USER_ID, sessionId);
       if (resp.sessionId) setSessionId(resp.sessionId);
 
       const botText = resp.error || !resp.message

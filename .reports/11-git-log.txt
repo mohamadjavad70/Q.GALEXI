@@ -1,0 +1,2 @@
+﻿be5fab4 feat: Complete Q.GALEXI implementation - Agent Market, World Replay, Collective Memory, Multi-Agent Coordination
+6a4a084 feat: Galaxy Mode + Sovereign Hub + CI/CD
